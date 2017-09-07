@@ -10,6 +10,7 @@ namespace LexicalAnalysis
         TokValue,
         TokIf,
         TokElse,
+        TokFor,
         TokWhile,
         TokDo,
         TokBreak,
