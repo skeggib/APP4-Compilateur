@@ -41,6 +41,7 @@ namespace LexicalAnalysis
         TokNot,
         TokReference,
         TokPointer,
-        TokAssign
+        TokAssign,
+        TokComma
     }
 }

@@ -56,16 +56,16 @@
     <None Include="Code.lc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LexicalAnalysis\LexicalAnalysis.csproj">
-      <Project>{FC925C4A-8B76-40FE-9418-749D587E8782}</Project>
-      <Name>LexicalAnalysis</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LexicalAnalysis\LexicalAnalysis.csproj">
+      <Project>{ee71db20-30ff-4117-ba77-db7b95d60471}</Project>
+      <Name>LexicalAnalysis</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

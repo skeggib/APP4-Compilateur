@@ -67,6 +67,7 @@ namespace LexicalAnalysis
                     _specialCharactersAssociations.Add("!", TokenCategory.TokNot);
                     _specialCharactersAssociations.Add("&", TokenCategory.TokReference);
                     _specialCharactersAssociations.Add("@", TokenCategory.TokPointer);
+                    _specialCharactersAssociations.Add(",", TokenCategory.TokComma);
                 }
 
                 return _specialCharactersAssociations;

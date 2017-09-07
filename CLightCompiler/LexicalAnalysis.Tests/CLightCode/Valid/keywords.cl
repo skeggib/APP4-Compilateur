@@ -1,0 +1,10 @@
+﻿if
+else
+for
+while
+do
+break
+continue
+return
+int
+void

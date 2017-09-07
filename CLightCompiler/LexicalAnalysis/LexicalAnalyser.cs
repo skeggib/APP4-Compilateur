@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,7 +13,7 @@ namespace LexicalAnalysis
 
         public LexicalAnalyser()
         {
-            _specialCharacters = new HashSet<char> { '(', ')', '{', '}', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', '&', '|', '@' };
+            _specialCharacters = new HashSet<char> { '(', ')', '{', '}', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', '&', '|', '@', ',' };
         }
 
         public List<Token> Convert(string code)
@@ -74,8 +75,15 @@ namespace LexicalAnalysis
                     word += code[i];
                     if (i < code.Length - 1 && IsValidSpecialCharacter(code[i + 1]))
                     {
-                        i++;
-                        word += code[i];
+                        var qDoubleSpecialChars = from specialChar in Token.SpecialCharactersAssociations
+                                                  where specialChar.Key.Count() == 2 && specialChar.Key[0] == code[i]
+                                                  select specialChar.Key;
+
+                        if (qDoubleSpecialChars.Count() > 0)
+                        {
+                            i++;
+                            word += code[i];
+                        }
                     }
 
                     if (Token.SpecialCharactersAssociations.ContainsKey(word))
@@ -85,7 +93,7 @@ namespace LexicalAnalysis
 
                     else
                     {
-                        throw new LexicalException(offset);
+                        throw new LexicalException(offset, word);
                     }
                 }
 
@@ -96,7 +104,7 @@ namespace LexicalAnalysis
 
                 else
                 {
-                    throw new LexicalException(i);
+                    throw new LexicalException(i, code[i].ToString());
                 }
             }
 
