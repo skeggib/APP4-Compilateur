@@ -74,6 +74,20 @@ namespace LexicalAnalysis
             }
         }
 
+        private static HashSet<char> _specialCharacters;
+        public static HashSet<char> SpecialCharacters
+        {
+            get
+            {
+                if (_specialCharacters == null)
+                {
+                    _specialCharacters = new HashSet<char> { '(', ')', '{', '}', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', '&', '|', '@', ',' };
+                }
+
+                return _specialCharacters;
+            }
+        }
+
         public Token(TokenCategory category, int offset)
         {
             Category = category;

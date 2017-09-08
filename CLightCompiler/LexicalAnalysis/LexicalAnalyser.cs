@@ -9,13 +9,6 @@ namespace LexicalAnalysis
 {
     public class LexicalAnalyser
     {
-        private HashSet<char> _specialCharacters;
-
-        public LexicalAnalyser()
-        {
-            _specialCharacters = new HashSet<char> { '(', ')', '{', '}', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', '&', '|', '@', ',' };
-        }
-
         public List<Token> Convert(string code)
         {
             List<Token> tokens = new List<Token>();
@@ -113,7 +106,7 @@ namespace LexicalAnalysis
 
         private bool IsValidSpecialCharacter(char c)
         {
-            return _specialCharacters.Contains(c);
+            return Token.SpecialCharacters.Contains(c);
         }
 
         private bool IsAlphabeticalCharacter(char c)

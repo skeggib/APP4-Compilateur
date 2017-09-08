@@ -1,4 +1,5 @@
 ﻿using LexicalAnalysis;
+using Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,13 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            LexicalAnalyser analyser = new LexicalAnalyser();
-            string code = Encoding.ASCII.GetString(Resource.Code);
-            List<Token> list = analyser.Convert(code);
-            foreach (Token token in list)
-            {
-                Console.Write(token.ToCode() + " ");
-            }
-            Console.ReadKey();
+            SymbolsTable table = new SymbolsTable();
+
+            table.AddSymbol(new Token(TokenCategory.TokIdent, 0) { Ident = "var1" });
+            table.StartBlock();
+            table.AddSymbol(new Token(TokenCategory.TokIdent, 0) { Ident = "var2" });
+            table.GetSymbol(new Token(TokenCategory.TokIdent, 0) { Ident = "var1" });
+            table.EndBlock();
         }
     }
 }
