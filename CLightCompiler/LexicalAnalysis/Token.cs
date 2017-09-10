@@ -6,12 +6,30 @@ namespace LexicalAnalysis
 {
     public class Token
     {
+        /// <summary>
+        /// Categorie du token
+        /// </summary>
         public TokenCategory Category { get; set; }
+
+        /// <summary>
+        /// Identifiant du token, a une valeur uniquement si la categorie est TokIdent
+        /// </summary>
         public string Ident { get; set; }
+
+        /// <summary>
+        /// Valeur du token, a une valeur uniquement si la categorie est TokValue
+        /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Position du token dans le fichier source
+        /// </summary>
         public int Offset { get; set; }
 
         private static Dictionary<string, TokenCategory> _keyWordsAssociations;
+        /// <summary>
+        /// Association des mot-cles aux categories de token
+        /// </summary>
         public static Dictionary<string, TokenCategory> KeyWordsAssociations
         {
             get
@@ -36,6 +54,9 @@ namespace LexicalAnalysis
         }
 
         private static Dictionary<string, TokenCategory> _specialCharactersAssociations;
+        /// <summary>
+        /// Association des caracteres speciaux aux categories de token
+        /// </summary>
         public static Dictionary<string, TokenCategory> SpecialCharactersAssociations
         {
             get
@@ -75,6 +96,9 @@ namespace LexicalAnalysis
         }
 
         private static HashSet<char> _specialCharacters;
+        /// <summary>
+        /// Caracteres speciaux autorises
+        /// </summary>
         public static HashSet<char> SpecialCharacters
         {
             get
@@ -88,6 +112,11 @@ namespace LexicalAnalysis
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="category">Categorie du token</param>
+        /// <param name="offset">Position dans le fichier source</param>
         public Token(TokenCategory category, int offset)
         {
             Category = category;
@@ -106,6 +135,10 @@ namespace LexicalAnalysis
                 "\t offset = " + Offset;
         }
 
+        /// <summary>
+        /// Transforme le token en code source
+        /// </summary>
+        /// <returns>Le code source correspondant au token</returns>
         public string ToCode()
         {
             if (Category == TokenCategory.TokIdent)
