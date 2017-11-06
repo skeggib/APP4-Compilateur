@@ -43,6 +43,14 @@
     <Compile Include="Node.cs" />
     <Compile Include="NodeCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SyntaxAnalyser.cs" />
+    <Compile Include="SyntaxException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LexicalAnalysis\LexicalAnalysis.csproj">
+      <Project>{EE71DB20-30FF-4117-BA77-DB7B95D60471}</Project>
+      <Name>LexicalAnalysis</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
