@@ -1,5 +1,6 @@
 ﻿using LexicalAnalysis;
 using Symbols;
+using SyntaxAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,12 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            SymbolsTable table = new SymbolsTable();
+            Node nConst1 = new Node(NodeCategory.NodeConst, "3");
+            Node nConst2 = new Node(NodeCategory.NodeConst, "5");
+            Node nAdd = new Node(NodeCategory.NodeAddition, null, nConst1, nConst2);
 
-            table.AddSymbol(new Token(TokenCategory.TokIdent, 0) { Ident = "var1" });
-            table.StartBlock();
-            table.AddSymbol(new Token(TokenCategory.TokIdent, 0) { Ident = "var2" });
-            table.GetSymbol(new Token(TokenCategory.TokIdent, 0) { Ident = "var1" });
-            table.EndBlock();
+            Console.WriteLine(nAdd);
+            Console.ReadKey();
         }
     }
 }
