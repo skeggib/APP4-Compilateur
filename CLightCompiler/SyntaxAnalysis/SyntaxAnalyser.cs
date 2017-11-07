@@ -43,11 +43,11 @@ namespace SyntaxAnalysis
             return null;
         }
 
-        private Node Factor()
-        {
-            Token curr = _tokens[_index];
+        //private Node Factor()
+        //{
+        //    Token curr = _tokens[_index];
 
 
-        }
+        //}
     }
 }

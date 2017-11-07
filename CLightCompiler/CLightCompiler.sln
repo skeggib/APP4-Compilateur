@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Symbols", "Symbols\Symbols.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxAnalysis", "SyntaxAnalysis\SyntaxAnalysis.csproj", "{88933B43-5FB3-436C-9B3F-8EA1E38EE3B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxAnalysis.Tests", "SyntaxAnalysis.Tests\SyntaxAnalysis.Tests.csproj", "{70DCF451-6563-4EF1-B7DD-F80BF185403A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{88933B43-5FB3-436C-9B3F-8EA1E38EE3B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88933B43-5FB3-436C-9B3F-8EA1E38EE3B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88933B43-5FB3-436C-9B3F-8EA1E38EE3B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70DCF451-6563-4EF1-B7DD-F80BF185403A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70DCF451-6563-4EF1-B7DD-F80BF185403A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70DCF451-6563-4EF1-B7DD-F80BF185403A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70DCF451-6563-4EF1-B7DD-F80BF185403A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

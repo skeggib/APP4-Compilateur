@@ -15,7 +15,9 @@ namespace SyntaxAnalysis
         public NodeCategory Category { get; private set; }
 
         /// <summary>
-        /// Contient la valeur si le noeud est une constante et l'identifiant si le noeud est une reference
+        /// Contient la valeur si le noeud est une constante et l'identifiant
+        /// si le noeud est une reference, aleur indeterminee pour les autres
+        /// categories de noeud
         /// </summary>
         public string Value { get; private set; }
 
@@ -23,6 +25,12 @@ namespace SyntaxAnalysis
 
         public Node(NodeCategory category, string value = null, params Node[] childs)
         {
+            if ((category == NodeCategory.NodeConst ||
+                category == NodeCategory.NodeRefFunc ||
+                category == NodeCategory.NodeRefVar) &&
+                value == null)
+                throw new ArgumentException("The value cannot be null if the node is a const or a ref", nameof(value));
+
             _id = _globalId;
             _globalId++;
 
