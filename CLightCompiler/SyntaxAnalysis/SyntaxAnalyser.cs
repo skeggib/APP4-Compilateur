@@ -17,33 +17,39 @@ namespace SyntaxAnalysis
             _tokens = tokens;
             _index = 0;
 
-            return null;
+            return Terme();
         }
 
         private Node Primary()
         {
-            Token curr = _tokens[_index];
+            if (_index >= _tokens.Count)
+                return null;
 
-            switch (curr.Category)
+            switch (_tokens[_index].Category)
             {
                 case TokenCategory.TokIdent:
-                    return new Node(NodeCategory.NodeRefVar, curr.Ident);
+                    _index++;
+                    return new Node(NodeCategory.NodeRefVar, _tokens[_index-1].Ident);
+
                 case TokenCategory.TokValue:
-                    return new Node(NodeCategory.NodeConst, curr.Value);
+                    _index++;
+                    return new Node(NodeCategory.NodeConst, _tokens[_index-1].Value);
+
                 case TokenCategory.TokMinus: // Revoir si deux '-' a la suite sont valides
                     _index++;
                     Node n = Primary();
                     if (n == null)
                         throw new SyntaxException(_tokens[_index].Offset, "unexpected token after '-'");
                     return new Node(NodeCategory.NodeNegative, null, n);
+
                 case TokenCategory.TokOpeningParenthesis:
                     _index++;
                     Node n1 = Terme();
                     if (n1 == null)
                         throw new SyntaxException(_tokens[_index].Offset, "unexpected expression");
-                    _index++;
                     if (_tokens[_index].Category != TokenCategory.TokClosingParenthesis)
                         throw new SyntaxException(_tokens[_index].Offset, "unexpected ')'");
+                    _index++;
                     return n1;
             }
 
@@ -52,38 +58,66 @@ namespace SyntaxAnalysis
 
         private Node Factor()
         {
-            Token curr = _tokens[_index];
-            Node n1 = Primary();
-            if (n1 == null)
+            if (_index >= _tokens.Count)
                 return null;
+
+            Node p = Primary();
+            if (p == null)
+                return null;
+            
+            if (_index >= _tokens.Count)
+                return p;
+
+            Node op = null;
+            if (_tokens[_index].Category == TokenCategory.TokMultiply)
+                op = new Node(NodeCategory.NodeMultiplication, null, p);
+            else if (_tokens[_index].Category == TokenCategory.TokDivide)
+                op = new Node(NodeCategory.NodeDivision, null, p);
+            else
+                return p;
+
             _index++;
-            curr = _tokens[_index];
-            _index++;
-            Node n2 = Factor();
-            if (curr.Category == TokenCategory.TokMultiply)
-                return new Node(NodeCategory.NodeMultiplication, null, n1, n2);
-            else if (curr.Category == TokenCategory.TokDivide)
-                return new Node(NodeCategory.NodeDivision, null, n1, n2);
-            _index--;
-            return n1;
+            if (_index >= _tokens.Count)
+                throw new SyntaxException(_tokens[_index-1].Offset, "Missing operand");
+
+            Node f = Factor();
+            if (f == null)
+                throw new SyntaxException(_tokens[_index-1].Offset, "Invalid operand");
+
+            op.Childs.Add(f);
+            return op;
         }
 
         private Node Terme()
         {
-            Token curr = _tokens[_index];
-            Node n1 = Primary();
-            if (n1 == null)
+            if (_index >= _tokens.Count)
                 return null;
+
+            Node f = Factor();
+            if (f == null)
+                return null;
+            
+            if (_index >= _tokens.Count)
+                return f;
+
+            Node op = null;
+            if (_tokens[_index].Category == TokenCategory.TokPlus)
+                op = new Node(NodeCategory.NodeAddition, null, f);
+            else if (_tokens[_index].Category == TokenCategory.TokMinus)
+                op = new Node(NodeCategory.NodeSubstraction, null, f);
+            else
+                return f;
+
             _index++;
-            curr = _tokens[_index];
-            _index++;
-            Node n2 = Terme();
-            if (curr.Category == TokenCategory.TokPlus)
-                return new Node(NodeCategory.NodeAddition, null, n1, n2);
-            else if (curr.Category == TokenCategory.TokMinus)
-                return new Node(NodeCategory.NodeSubstraction, null, n1, n2);
-            _index--;
-            return n1;
+            if (_index >= _tokens.Count)
+                throw new SyntaxException(_tokens[_index-1].Offset, "Missing operand");
+
+            Node t = Terme();
+            if (t == null)
+                throw new SyntaxException(_tokens[_index-1].Offset, "Invalid operand");
+
+            op.Childs.Add(t);
+            return op;
         }
     }
 }

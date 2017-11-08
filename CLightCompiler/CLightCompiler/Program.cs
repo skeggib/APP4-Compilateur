@@ -16,6 +16,7 @@ namespace CLightCompiler
                 Console.WriteLine($"Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
                 Console.WriteLine("List of availables asm:");
                 Console.WriteLine("- msm (default)");
+                Exit();
                 return;
             }
 
@@ -34,6 +35,7 @@ namespace CLightCompiler
                     break;
                 default:
                     Console.WriteLine($"Unknown architecture: {architecture}");
+                    Exit();
                     return;
             }
 
@@ -61,20 +63,28 @@ namespace CLightCompiler
                     catch (Exception)
                     {
                         Console.WriteLine($"Cannot write file {outputPath}");
+                        Exit();
                         return;
                     }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Cannot compile: {e.Message}");
+                    Exit();
                     return;
                 }
             }
             catch (Exception)
             {
                 Console.WriteLine($"Cannot read file {inputPath}");
+                Exit();
                 return;
             }
+        }
+
+        private static void Exit()
+        {
+            Console.ReadKey();
         }
     }
 }
