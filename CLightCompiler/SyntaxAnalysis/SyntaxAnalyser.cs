@@ -36,8 +36,15 @@ namespace SyntaxAnalysis
                     if (n == null)
                         throw new SyntaxException(_tokens[_index].Offset, "unexpected token after '-'");
                     return new Node(NodeCategory.NodeNegative, null, n);
-                case TokenCategory.TokOpeningParenthesis: // TODO
-                    break;
+                case TokenCategory.TokOpeningParenthesis:
+                    _index++;
+                    Node n1 = Terme();
+                    if (n1 == null)
+                        throw new SyntaxException(_tokens[_index].Offset, "unexpected expression");
+                    _index++;
+                    if (_tokens[_index].Category != TokenCategory.TokClosingParenthesis)
+                        throw new SyntaxException(_tokens[_index].Offset, "unexpected ')'");
+                    return n1;
             }
 
             return null;
