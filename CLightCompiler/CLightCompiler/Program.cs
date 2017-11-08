@@ -4,9 +4,6 @@ using SyntaxAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CLightCompiler
 {
@@ -14,56 +11,62 @@ namespace CLightCompiler
     {
         static void Main(string[] args)
         {
-            if (args.Length < 3)
+            if (args.Length < 2)
             {
-                Console.WriteLine($"Usage: {args[0]} <input_file> <output_file> [asm]");
+                Console.WriteLine($"Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
                 Console.WriteLine("List of availables asm:");
                 Console.WriteLine("- msm (default)");
                 return;
             }
 
-            string inputPath = args[1];
-            string outputPath = args[2];
-            string asmName = args.Length > 3 ? args[3] : "msm";
+            string inputPath = args[0];
+            string outputPath = args[1];
+            string architecture = args.Length > 2 ? args[2] : "msm";
 
             LexicalAnalyser lexical = new LexicalAnalyser();
             SyntaxAnalyser syntax = new SyntaxAnalyser();
 
             ICodeGenerator generator = null;
-            switch (asmName)
+            switch (architecture)
             {
                 case "msm":
                     generator = new MSMCodeGenerator();
                     break;
                 default:
-                    Console.WriteLine("Unknown asm");
+                    Console.WriteLine($"Unknown architecture: {architecture}");
                     return;
             }
 
             try
             {
+                string cLightCode = null;
                 using (StreamReader reader = new StreamReader(inputPath))
                 {
-                    string cLightCode = reader.ReadToEnd();
+                    cLightCode = reader.ReadToEnd();
                 }
 
                 try
                 {
+                    List<Token> tokens = lexical.Convert(cLightCode);
+                    Node tree = syntax.Convert(tokens);
+                    string asmCode = generator.Generate(tree);
 
+                    try
+                    {
+                        using (StreamWriter writer = new StreamWriter(outputPath, false))
+                        {
+                            writer.Write(asmCode);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine($"Cannot write file {outputPath}");
+                        return;
+                    }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Cannot compile: {e.Message}");
-                    return;
-                }
-
-                try
-                {
-
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine($"Cannot write file {outputPath}");
                     return;
                 }
             }
