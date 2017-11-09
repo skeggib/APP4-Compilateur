@@ -9,7 +9,7 @@ namespace LexicalAnalysis
         /// <summary>
         /// Categorie du token
         /// </summary>
-        public TokenCategory Category { get; set; }
+        public Tokens Category { get; set; }
 
         /// <summary>
         /// Identifiant du token, a une valeur uniquement si la categorie est TokIdent
@@ -26,69 +26,69 @@ namespace LexicalAnalysis
         /// </summary>
         public int Offset { get; set; }
 
-        private static Dictionary<string, TokenCategory> _keyWordsAssociations;
+        private static Dictionary<string, Tokens> _keyWordsAssociations;
         /// <summary>
         /// Association des mot-cles aux categories de token
         /// </summary>
-        public static Dictionary<string, TokenCategory> KeyWordsAssociations
+        public static Dictionary<string, Tokens> KeyWordsAssociations
         {
             get
             {
                 if (_keyWordsAssociations == null)
                 {
-                    _keyWordsAssociations = new Dictionary<string, TokenCategory>();
-                    _keyWordsAssociations.Add("if", TokenCategory.TokIf);
-                    _keyWordsAssociations.Add("else", TokenCategory.TokElse);
-                    _keyWordsAssociations.Add("for", TokenCategory.TokFor);
-                    _keyWordsAssociations.Add("while", TokenCategory.TokWhile);
-                    _keyWordsAssociations.Add("do", TokenCategory.TokDo);
-                    _keyWordsAssociations.Add("break", TokenCategory.TokBreak);
-                    _keyWordsAssociations.Add("continue", TokenCategory.TokContinue);
-                    _keyWordsAssociations.Add("return", TokenCategory.TokReturn);
-                    _keyWordsAssociations.Add("int", TokenCategory.TokInt);
-                    _keyWordsAssociations.Add("void", TokenCategory.TokVoid);
+                    _keyWordsAssociations = new Dictionary<string, Tokens>();
+                    _keyWordsAssociations.Add("if", Tokens.If);
+                    _keyWordsAssociations.Add("else", Tokens.Else);
+                    _keyWordsAssociations.Add("for", Tokens.For);
+                    _keyWordsAssociations.Add("while", Tokens.While);
+                    _keyWordsAssociations.Add("do", Tokens.Do);
+                    _keyWordsAssociations.Add("break", Tokens.Break);
+                    _keyWordsAssociations.Add("continue", Tokens.Continue);
+                    _keyWordsAssociations.Add("return", Tokens.Return);
+                    _keyWordsAssociations.Add("int", Tokens.Int);
+                    _keyWordsAssociations.Add("void", Tokens.Void);
                 }
 
                 return _keyWordsAssociations;
             }
         }
 
-        private static Dictionary<string, TokenCategory> _specialCharactersAssociations;
+        private static Dictionary<string, Tokens> _specialCharactersAssociations;
         /// <summary>
         /// Association des caracteres speciaux aux categories de token
         /// </summary>
-        public static Dictionary<string, TokenCategory> SpecialCharactersAssociations
+        public static Dictionary<string, Tokens> SpecialCharactersAssociations
         {
             get
             {
                 if (_specialCharactersAssociations == null)
                 {
-                    _specialCharactersAssociations = new Dictionary<string, TokenCategory>();
-                    _specialCharactersAssociations.Add("(", TokenCategory.TokOpeningParenthesis);
-                    _specialCharactersAssociations.Add(")", TokenCategory.TokClosingParenthesis);
-                    _specialCharactersAssociations.Add("{", TokenCategory.TokOpeningBrace);
-                    _specialCharactersAssociations.Add("}", TokenCategory.TokClosingBrace);
-                    _specialCharactersAssociations.Add("[", TokenCategory.TokOpeningBracket);
-                    _specialCharactersAssociations.Add("]", TokenCategory.TokClosingBracket);
-                    _specialCharactersAssociations.Add(";", TokenCategory.TokSemicolon);
-                    _specialCharactersAssociations.Add("=", TokenCategory.TokAssign);
-                    _specialCharactersAssociations.Add("+", TokenCategory.TokPlus);
-                    _specialCharactersAssociations.Add("-", TokenCategory.TokMinus);
-                    _specialCharactersAssociations.Add("*", TokenCategory.TokMultiply);
-                    _specialCharactersAssociations.Add("/", TokenCategory.TokDivide);
-                    _specialCharactersAssociations.Add("%", TokenCategory.TokModulo);
-                    _specialCharactersAssociations.Add("==", TokenCategory.TokEquals);
-                    _specialCharactersAssociations.Add("!=", TokenCategory.TokNotEquals);
-                    _specialCharactersAssociations.Add("<", TokenCategory.TokLowerThan);
-                    _specialCharactersAssociations.Add(">", TokenCategory.TokGreaterThan);
-                    _specialCharactersAssociations.Add("<=", TokenCategory.TokLowerOrEquals);
-                    _specialCharactersAssociations.Add(">=", TokenCategory.TokGreaterOrEquals);
-                    _specialCharactersAssociations.Add("&&", TokenCategory.TokAnd);
-                    _specialCharactersAssociations.Add("||", TokenCategory.TokOr);
-                    _specialCharactersAssociations.Add("!", TokenCategory.TokNot);
-                    _specialCharactersAssociations.Add("&", TokenCategory.TokReference);
-                    _specialCharactersAssociations.Add("@", TokenCategory.TokPointer);
-                    _specialCharactersAssociations.Add(",", TokenCategory.TokComma);
+                    _specialCharactersAssociations = new Dictionary<string, Tokens>();
+                    _specialCharactersAssociations.Add("(", Tokens.OpeningParenthesis);
+                    _specialCharactersAssociations.Add(")", Tokens.ClosingParenthesis);
+                    _specialCharactersAssociations.Add("{", Tokens.OpeningBrace);
+                    _specialCharactersAssociations.Add("}", Tokens.ClosingBrace);
+                    _specialCharactersAssociations.Add("[", Tokens.OpeningBracket);
+                    _specialCharactersAssociations.Add("]", Tokens.ClosingBracket);
+                    _specialCharactersAssociations.Add(";", Tokens.Semicolon);
+                    _specialCharactersAssociations.Add("=", Tokens.Assign);
+                    _specialCharactersAssociations.Add("+", Tokens.Plus);
+                    _specialCharactersAssociations.Add("-", Tokens.Minus);
+                    _specialCharactersAssociations.Add("*", Tokens.Multiply);
+                    _specialCharactersAssociations.Add("/", Tokens.Divide);
+                    _specialCharactersAssociations.Add("%", Tokens.Modulo);
+                    _specialCharactersAssociations.Add("==", Tokens.Equals);
+                    _specialCharactersAssociations.Add("!=", Tokens.NotEquals);
+                    _specialCharactersAssociations.Add("<", Tokens.LowerThan);
+                    _specialCharactersAssociations.Add(">", Tokens.GreaterThan);
+                    _specialCharactersAssociations.Add("<=", Tokens.LowerOrEqual);
+                    _specialCharactersAssociations.Add(">=", Tokens.GreaterOrEqual);
+                    _specialCharactersAssociations.Add("&&", Tokens.And);
+                    _specialCharactersAssociations.Add("||", Tokens.Or);
+                    _specialCharactersAssociations.Add("!", Tokens.Not);
+                    _specialCharactersAssociations.Add("&", Tokens.Reference);
+                    _specialCharactersAssociations.Add("@", Tokens.Pointer);
+                    _specialCharactersAssociations.Add(",", Tokens.Comma);
                 }
 
                 return _specialCharactersAssociations;
@@ -117,7 +117,7 @@ namespace LexicalAnalysis
         /// </summary>
         /// <param name="category">Categorie du token</param>
         /// <param name="offset">Position dans le fichier source</param>
-        public Token(TokenCategory category, int offset)
+        public Token(Tokens category, int offset)
         {
             Category = category;
             Ident = string.Empty;
@@ -128,10 +128,10 @@ namespace LexicalAnalysis
         public override string ToString()
         {
             return Category.ToString() + 
-                (Category == TokenCategory.TokIdent || Category == TokenCategory.TokValue ? "(" : "") +
-                (Category == TokenCategory.TokIdent ? Ident : "") +
-                (Category == TokenCategory.TokValue ? Value : "") +
-                (Category == TokenCategory.TokIdent || Category == TokenCategory.TokValue ? ")" : "") +
+                (Category == Tokens.Ident || Category == Tokens.Value ? "(" : "") +
+                (Category == Tokens.Ident ? Ident : "") +
+                (Category == Tokens.Value ? Value : "") +
+                (Category == Tokens.Ident || Category == Tokens.Value ? ")" : "") +
                 "\t offset = " + Offset;
         }
 
@@ -141,19 +141,19 @@ namespace LexicalAnalysis
         /// <returns>Le code source correspondant au token</returns>
         public string ToCode()
         {
-            if (Category == TokenCategory.TokIdent)
+            if (Category == Tokens.Ident)
             {
                 return Ident;
             }
 
-            else if (Category == TokenCategory.TokValue)
+            else if (Category == Tokens.Value)
             {
                 return Value;
             }
 
             else if (Token.KeyWordsAssociations.ContainsValue(Category))
             {
-                foreach (KeyValuePair<string, TokenCategory> item in Token.KeyWordsAssociations)
+                foreach (KeyValuePair<string, Tokens> item in Token.KeyWordsAssociations)
                 {
                     if (item.Value == Category)
                         return item.Key;
@@ -162,7 +162,7 @@ namespace LexicalAnalysis
 
             else if (Token.SpecialCharactersAssociations.ContainsValue(Category))
             {
-                foreach (KeyValuePair<string, TokenCategory> item in Token.SpecialCharactersAssociations)
+                foreach (KeyValuePair<string, Tokens> item in Token.SpecialCharactersAssociations)
                 {
                     if (item.Value == Category)
                         return item.Key;

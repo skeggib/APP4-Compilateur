@@ -28,38 +28,38 @@ namespace SyntaxAnalysis
 
             switch (_tokens[_index].Category)
             {
-                case TokenCategory.TokIdent:
+                case Tokens.Ident:
                     _index++;
-                    return new Node(NodeCategory.NodeRefVar, _tokens[_index - 1].Ident);
+                    return new Node(Nodes.RefVar, _tokens[_index - 1].Ident);
 
-                case TokenCategory.TokValue:
+                case Tokens.Value:
                     _index++;
-                    return new Node(NodeCategory.NodeConst, _tokens[_index - 1].Value);
+                    return new Node(Nodes.Const, _tokens[_index - 1].Value);
 
-                case TokenCategory.TokMinus: // TODO Revoir si deux '-' a la suite sont valides
+                case Tokens.Minus: // TODO Revoir si deux '-' a la suite sont valides
                     {
                         _index++;
                         Node p = Primary();
                         if (p == null)
                             throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '-'");
-                        return new Node(NodeCategory.NodeNegative, null, p);
+                        return new Node(Nodes.Negative, null, p);
                     }
 
-                case TokenCategory.TokNot:
+                case Tokens.Not:
                     {
                         _index++;
                         Node p = Primary();
                         if (p == null)
                             throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '!'");
-                        return new Node(NodeCategory.NodeNot, null, p);
+                        return new Node(Nodes.Not, null, p);
                     }
 
-                case TokenCategory.TokOpeningParenthesis:
+                case Tokens.OpeningParenthesis:
                     _index++;
                     Node e = Expression();
                     if (e == null)
                         throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected expression");
-                    if (_tokens[_index].Category != TokenCategory.TokClosingParenthesis)
+                    if (_tokens[_index].Category != Tokens.ClosingParenthesis)
                         throw new SyntaxException(_tokens[_index].Offset, "expected ')'");
                     _index++;
                     return e;
@@ -82,12 +82,12 @@ namespace SyntaxAnalysis
                 return p;
 
             Node op = null;
-            if (_tokens[_index].Category == TokenCategory.TokMultiply)
-                op = new Node(NodeCategory.NodeMultiplication, null, p);
-            else if (_tokens[_index].Category == TokenCategory.TokDivide)
-                op = new Node(NodeCategory.NodeDivision, null, p);
-            else if (_tokens[_index].Category == TokenCategory.TokModulo)
-                op = new Node(NodeCategory.NodeModulo, null, p);
+            if (_tokens[_index].Category == Tokens.Multiply)
+                op = new Node(Nodes.Multiplication, null, p);
+            else if (_tokens[_index].Category == Tokens.Divide)
+                op = new Node(Nodes.Division, null, p);
+            else if (_tokens[_index].Category == Tokens.Modulo)
+                op = new Node(Nodes.Modulo, null, p);
             else
                 return p;
 
@@ -117,10 +117,10 @@ namespace SyntaxAnalysis
                 return f;
 
             Node op = null;
-            if (_tokens[_index].Category == TokenCategory.TokPlus)
-                op = new Node(NodeCategory.NodeAddition, null, f);
-            else if (_tokens[_index].Category == TokenCategory.TokMinus)
-                op = new Node(NodeCategory.NodeSubstraction, null, f);
+            if (_tokens[_index].Category == Tokens.Plus)
+                op = new Node(Nodes.Addition, null, f);
+            else if (_tokens[_index].Category == Tokens.Minus)
+                op = new Node(Nodes.Substraction, null, f);
             else
                 return f;
 
@@ -152,28 +152,28 @@ namespace SyntaxAnalysis
             Node op = null;
             switch (_tokens[_index].Category)
             {
-                case TokenCategory.TokEquals:
-                    op = new Node(NodeCategory.NodeAreEqual, null, t);
+                case Tokens.Equals:
+                    op = new Node(Nodes.AreEqual, null, t);
                     break;
 
-                case TokenCategory.TokNotEquals:
-                    op = new Node(NodeCategory.NodeAreNotEqual, null, t);
+                case Tokens.NotEquals:
+                    op = new Node(Nodes.AreNotEqual, null, t);
                     break;
 
-                case TokenCategory.TokLowerThan:
-                    op = new Node(NodeCategory.NodeLowerThan, null, t);
+                case Tokens.LowerThan:
+                    op = new Node(Nodes.LowerThan, null, t);
                     break;
 
-                case TokenCategory.TokGreaterThan:
-                    op = new Node(NodeCategory.NodeGreaterThan, null, t);
+                case Tokens.GreaterThan:
+                    op = new Node(Nodes.GreaterThan, null, t);
                     break;
 
-                case TokenCategory.TokLowerOrEquals:
-                    op = new Node(NodeCategory.NodeLowerOrEqual, null, t);
+                case Tokens.LowerOrEqual:
+                    op = new Node(Nodes.LowerOrEqual, null, t);
                     break;
 
-                case TokenCategory.TokGreaterOrEquals:
-                    op = new Node(NodeCategory.NodeGreaterOrEqual, null, t);
+                case Tokens.GreaterOrEqual:
+                    op = new Node(Nodes.GreaterOrEqual, null, t);
                     break;
 
                 default:
@@ -206,8 +206,8 @@ namespace SyntaxAnalysis
                 return c;
 
             Node op = null;
-            if (_tokens[_index].Category == TokenCategory.TokAnd)
-                op = new Node(NodeCategory.NodeLogicAnd, null, c);
+            if (_tokens[_index].Category == Tokens.And)
+                op = new Node(Nodes.And, null, c);
             else
                 return c;
 
@@ -237,8 +237,8 @@ namespace SyntaxAnalysis
                 return l;
 
             Node op = null;
-            if (_tokens[_index].Category == TokenCategory.TokOr)
-                op = new Node(NodeCategory.NodeLogicOr, null, l);
+            if (_tokens[_index].Category == Tokens.Or)
+                op = new Node(Nodes.Or, null, l);
             else
                 return l;
 

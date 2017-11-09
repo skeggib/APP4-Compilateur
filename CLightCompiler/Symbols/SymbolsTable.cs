@@ -29,7 +29,7 @@ namespace Symbols
 
         public Symbol AddSymbol(Token token)
         {
-            if (token.Category != TokenCategory.TokIdent)
+            if (token.Category != Tokens.Ident)
                 throw new SymbolIsNotIdentException(token);
 
             if (_stack.Peek().ContainsKey(token.Ident))
@@ -43,7 +43,7 @@ namespace Symbols
 
         public Symbol GetSymbol(Token token)
         {
-            if (token.Category != TokenCategory.TokIdent)
+            if (token.Category != Tokens.Ident)
                 throw new SymbolIsNotIdentException(token);
 
             Symbol symbol = null;

@@ -38,7 +38,7 @@ namespace LexicalAnalysis
                     // Si variable
                     else
                     {
-                        tokens.Add(new Token(TokenCategory.TokIdent, offset)
+                        tokens.Add(new Token(Tokens.Ident, offset)
                         {
                             Ident = word
                         });
@@ -64,7 +64,7 @@ namespace LexicalAnalysis
                     else if(i < code.Length - 1 && IsAlphabeticalCharacter(code[i + 1]))
                         throw new LexicalException(offset, code[i].ToString());
 
-                    tokens.Add(new Token(TokenCategory.TokValue, offset) { Value = word });
+                    tokens.Add(new Token(Tokens.Value, offset) { Value = word });
                 }
 
                 else if (IsValidSpecialCharacter(code[i]))

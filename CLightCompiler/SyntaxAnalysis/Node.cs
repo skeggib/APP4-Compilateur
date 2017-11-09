@@ -12,7 +12,7 @@ namespace SyntaxAnalysis
 
         private int _id;
 
-        public NodeCategory Category { get; private set; }
+        public Nodes Category { get; private set; }
 
         /// <summary>
         /// Contient la valeur si le noeud est une constante et l'identifiant
@@ -23,11 +23,11 @@ namespace SyntaxAnalysis
 
         public IList<Node> Childs { get; private set; }
 
-        public Node(NodeCategory category, string value = null, params Node[] childs)
+        public Node(Nodes category, string value = null, params Node[] childs)
         {
-            if ((category == NodeCategory.NodeConst ||
-                category == NodeCategory.NodeRefFunc ||
-                category == NodeCategory.NodeRefVar) &&
+            if ((category == Nodes.Const ||
+                category == Nodes.RefFunc ||
+                category == Nodes.RefVar) &&
                 value == null)
                 throw new ArgumentException("The value cannot be null if the node is a const or a ref", nameof(value));
 
@@ -72,9 +72,9 @@ namespace SyntaxAnalysis
             if (other.Category != Category)
                 return false;
 
-            if ((Category == NodeCategory.NodeConst ||
-                Category == NodeCategory.NodeRefFunc ||
-                Category == NodeCategory.NodeRefVar) &&
+            if ((Category == Nodes.Const ||
+                Category == Nodes.RefFunc ||
+                Category == Nodes.RefVar) &&
                 !(other.Value?.Equals(Value) ?? ReferenceEquals(other.Value, Value)))
                 return false;
 

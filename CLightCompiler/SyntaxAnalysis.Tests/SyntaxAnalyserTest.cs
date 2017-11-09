@@ -14,24 +14,24 @@ namespace SyntaxAnalysis.Tests
             string clCode = "!2 && 3 < 5 || 1 == (2 + 3 != 5)";
 
             Node expectedTree = 
-            new Node(NodeCategory.NodeLogicOr, null,
-                new Node(NodeCategory.NodeLogicAnd, null,
-                    new Node(NodeCategory.NodeNot, null,
-                        new Node(NodeCategory.NodeConst, "2")
+            new Node(Nodes.Or, null,
+                new Node(Nodes.And, null,
+                    new Node(Nodes.Not, null,
+                        new Node(Nodes.Const, "2")
                     ),
-                    new Node(NodeCategory.NodeLowerThan, null,
-                        new Node(NodeCategory.NodeConst, "3"),
-                        new Node(NodeCategory.NodeConst, "5")
+                    new Node(Nodes.LowerThan, null,
+                        new Node(Nodes.Const, "3"),
+                        new Node(Nodes.Const, "5")
                     )
                 ),
-                new Node(NodeCategory.NodeAreEqual, null,
-                    new Node(NodeCategory.NodeConst, "1"),
-                    new Node(NodeCategory.NodeAreNotEqual, null,
-                        new Node(NodeCategory.NodeAddition, null,
-                            new Node(NodeCategory.NodeConst, "2"),
-                            new Node(NodeCategory.NodeConst, "3")
+                new Node(Nodes.AreEqual, null,
+                    new Node(Nodes.Const, "1"),
+                    new Node(Nodes.AreNotEqual, null,
+                        new Node(Nodes.Addition, null,
+                            new Node(Nodes.Const, "2"),
+                            new Node(Nodes.Const, "3")
                         ),
-                        new Node(NodeCategory.NodeConst, "5")
+                        new Node(Nodes.Const, "5")
                     )
                 )
             );
