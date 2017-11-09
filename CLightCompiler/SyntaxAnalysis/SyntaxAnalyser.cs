@@ -20,6 +20,7 @@ namespace SyntaxAnalysis
             return Expression();
         }
 
+        // P -> ident | const | -P | !P | (E)
         private Node Primary()
         {
             if (_index >= _tokens.Count)
@@ -29,40 +30,45 @@ namespace SyntaxAnalysis
             {
                 case TokenCategory.TokIdent:
                     _index++;
-                    return new Node(NodeCategory.NodeRefVar, _tokens[_index-1].Ident);
+                    return new Node(NodeCategory.NodeRefVar, _tokens[_index - 1].Ident);
 
                 case TokenCategory.TokValue:
                     _index++;
-                    return new Node(NodeCategory.NodeConst, _tokens[_index-1].Value);
+                    return new Node(NodeCategory.NodeConst, _tokens[_index - 1].Value);
 
-                case TokenCategory.TokMinus: // Revoir si deux '-' a la suite sont valides
-                    _index++;
-                    Node n = Primary();
-                    if (n == null)
-                        throw new SyntaxException(_tokens[_index-1].Offset, "unexpected token after '-'");
-                    return new Node(NodeCategory.NodeNegative, null, n);
+                case TokenCategory.TokMinus: // TODO Revoir si deux '-' a la suite sont valides
+                    {
+                        _index++;
+                        Node p = Primary();
+                        if (p == null)
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '-'");
+                        return new Node(NodeCategory.NodeNegative, null, p);
+                    }
 
                 case TokenCategory.TokNot:
-                    _index++;
-                    Node n2 = Primary();
-                    if (n2 == null)
-                        throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '!'");
-                    return new Node(NodeCategory.NodeNot, null, n2);
+                    {
+                        _index++;
+                        Node p = Primary();
+                        if (p == null)
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '!'");
+                        return new Node(NodeCategory.NodeNot, null, p);
+                    }
 
                 case TokenCategory.TokOpeningParenthesis:
                     _index++;
-                    Node n1 = Expression();
-                    if (n1 == null)
-                        throw new SyntaxException(_tokens[_index-1].Offset, "unexpected expression");
+                    Node e = Expression();
+                    if (e == null)
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected expression");
                     if (_tokens[_index].Category != TokenCategory.TokClosingParenthesis)
-                        throw new SyntaxException(_tokens[_index].Offset, "unexpected ')'");
+                        throw new SyntaxException(_tokens[_index].Offset, "expected ')'");
                     _index++;
-                    return n1;
+                    return e;
             }
 
             return null;
         }
 
+        // F -> P [ ( * | / ) F ]
         private Node Factor()
         {
             if (_index >= _tokens.Count)
@@ -71,7 +77,7 @@ namespace SyntaxAnalysis
             Node p = Primary();
             if (p == null)
                 return null;
-            
+
             if (_index >= _tokens.Count)
                 return p;
 
@@ -87,16 +93,17 @@ namespace SyntaxAnalysis
 
             _index++;
             if (_index >= _tokens.Count)
-                throw new SyntaxException(_tokens[_index-1].Offset, "Missing operand");
+                throw new SyntaxException(_tokens[_index - 1].Offset, "Missing operand");
 
             Node f = Factor();
             if (f == null)
-                throw new SyntaxException(_tokens[_index-1].Offset, "Invalid operand");
+                throw new SyntaxException(_tokens[_index - 1].Offset, "Invalid operand");
 
             op.Childs.Add(f);
             return op;
         }
-
+        
+        // T -> F [ ( + | - ) T ]
         private Node Terme()
         {
             if (_index >= _tokens.Count)
@@ -105,7 +112,7 @@ namespace SyntaxAnalysis
             Node f = Factor();
             if (f == null)
                 return null;
-            
+
             if (_index >= _tokens.Count)
                 return f;
 
@@ -119,16 +126,17 @@ namespace SyntaxAnalysis
 
             _index++;
             if (_index >= _tokens.Count)
-                throw new SyntaxException(_tokens[_index-1].Offset, "Missing operand");
+                throw new SyntaxException(_tokens[_index - 1].Offset, "Missing operand");
 
             Node t = Terme();
             if (t == null)
-                throw new SyntaxException(_tokens[_index-1].Offset, "Invalid operand");
+                throw new SyntaxException(_tokens[_index - 1].Offset, "Invalid operand");
 
             op.Childs.Add(t);
             return op;
         }
 
+        // C -> T [ ( == | != | < | > | <= | >= ) C ]
         private Node Comparaison()
         {
             if (_index >= _tokens.Count)
@@ -167,7 +175,7 @@ namespace SyntaxAnalysis
                 case TokenCategory.TokGreaterOrEquals:
                     op = new Node(NodeCategory.NodeGreaterOrEqual, null, t);
                     break;
-                
+
                 default:
                     return t;
             }
@@ -184,6 +192,7 @@ namespace SyntaxAnalysis
             return op;
         }
 
+        // L -> C [ && L ]
         private Node Logic()
         {
             if (_index >= _tokens.Count)
@@ -213,6 +222,8 @@ namespace SyntaxAnalysis
             op.Childs.Add(l);
             return op;
         }
+
+        // E -> L [ || E ]
         private Node Expression()
         {
             if (_index >= _tokens.Count)
