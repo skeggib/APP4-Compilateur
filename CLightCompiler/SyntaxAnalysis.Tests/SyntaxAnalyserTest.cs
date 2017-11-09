@@ -16,10 +16,10 @@ namespace SyntaxAnalysis.Tests
             Node expectedTree = 
             new Node(NodeCategory.NodeLogicOr, null,
                 new Node(NodeCategory.NodeLogicAnd, null,
-                    new Node(NodeCategory.NodeLogicNot, null,
+                    new Node(NodeCategory.NodeNot, null,
                         new Node(NodeCategory.NodeConst, "2")
                     ),
-                    new Node(NodeCategory.NodeLessThan, null,
+                    new Node(NodeCategory.NodeLowerThan, null,
                         new Node(NodeCategory.NodeConst, "3"),
                         new Node(NodeCategory.NodeConst, "5")
                     )

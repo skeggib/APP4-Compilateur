@@ -51,11 +51,18 @@ namespace LexicalAnalysis
                     int offset = i;
 
                     word += code[i];
-                    while (i < code.Length - 1 && IsNumericalCharacter(code[i + 1]))
+                    if(i < code.Length - 1 && IsNumericalCharacter(code[i + 1]))
                     {
-                        i++;
-                        word += code[i];
+                        while (i < code.Length && IsNumericalCharacter(code[i]))
+                        {
+                            i++;
+                            if (i < code.Length && IsAlphabeticalCharacter(code[i]))
+                                throw new LexicalException(offset, code[i].ToString());
+                            word += code[i];
+                        }
                     }
+                    else if(i < code.Length - 1 && IsAlphabeticalCharacter(code[i + 1]))
+                        throw new LexicalException(offset, code[i].ToString());
 
                     tokens.Add(new Token(TokenCategory.TokValue, offset) { Value = word });
                 }

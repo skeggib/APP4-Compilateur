@@ -75,7 +75,7 @@ namespace SyntaxAnalysis
             if ((Category == NodeCategory.NodeConst ||
                 Category == NodeCategory.NodeRefFunc ||
                 Category == NodeCategory.NodeRefVar) &&
-                (other.Value?.Equals(Value) ?? !ReferenceEquals(other.Value, Value)))
+                !(other.Value?.Equals(Value) ?? ReferenceEquals(other.Value, Value)))
                 return false;
 
             if (other.Childs != null && Childs != null)
