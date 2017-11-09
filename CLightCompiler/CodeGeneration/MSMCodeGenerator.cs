@@ -52,10 +52,64 @@ namespace CodeGeneration
                     code += $"div.i\n";
                     break;
 
+                case NodeCategory.NodeModulo:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"mod.i\n";
+                    break;
+
                 case NodeCategory.NodeNegative:
                     code += $"push.i 0\n";
                     code += _generate(tree.Childs[0]);
                     code += $"sub.i\n";
+                    break;
+
+                case NodeCategory.NodeEquals:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"cmpeq.i\n";
+                    break;
+
+                case NodeCategory.NodeNotEquals:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"cmpne.i\n";
+                    break;
+
+                case NodeCategory.NodeLowerThan:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"cmplt.i\n";
+                    break;
+
+                case NodeCategory.NodeLowerOrEquals:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"cmple.i\n";
+                    break;
+
+                case NodeCategory.NodeGreaterThan:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"cmpgt.i\n";
+                    break;
+
+                case NodeCategory.NodeGreaterOrEquals:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"cmpge.i\n";
+                    break;
+
+                case NodeCategory.NodeOr:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"or.i\n";
+                    break;
+
+                case NodeCategory.NodeAnd:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"and.i\n";
                     break;
 
                 default:
