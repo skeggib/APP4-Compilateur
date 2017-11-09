@@ -9,6 +9,12 @@
         NodeSubstraction,
         NodeMultiplication,
         NodeDivision,
-        NodeNegative
+        NodeNegative,
+        NodeLogicOr,
+        NodeLogicAnd,
+        NodeLogicNot,
+        NodeLessThan,
+        NodeAreEqual,
+        NodeAreNotEqual
     }
 }

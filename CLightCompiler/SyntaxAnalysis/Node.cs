@@ -62,5 +62,34 @@ namespace SyntaxAnalysis
 
             return str;
         }
+
+        public override bool Equals(object obj)
+        {
+            Node other = obj as Node;
+            if (other == null)
+                return false;
+
+            if (other.Category != Category)
+                return false;
+
+            if ((Category == NodeCategory.NodeConst ||
+                Category == NodeCategory.NodeRefFunc ||
+                Category == NodeCategory.NodeRefVar) &&
+                (other.Value?.Equals(Value) ?? !ReferenceEquals(other.Value, Value)))
+                return false;
+
+            if (other.Childs != null && Childs != null)
+            {
+                if (other.Childs.Count != Childs.Count)
+                    return false;
+                for (int i = 0; i < Childs.Count; i++)
+                    if (!other.Childs[i].Equals(Childs[i]))
+                        return false;
+            }
+            else if (!ReferenceEquals(other.Childs, Childs))
+                return false;
+
+            return true;
+        }
     }
 }

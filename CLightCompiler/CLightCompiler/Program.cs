@@ -14,7 +14,7 @@ namespace CLightCompiler
             if (args.Length < 2)
             {
                 Console.WriteLine($"Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
-                Console.WriteLine("List of availables asm:");
+                Console.WriteLine("List of availables architecture:");
                 Console.WriteLine("- msm (default)");
                 Exit();
                 return;

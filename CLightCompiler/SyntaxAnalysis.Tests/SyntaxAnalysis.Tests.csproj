@@ -50,11 +50,16 @@
   <ItemGroup>
     <Compile Include="NodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SyntaxAnalyserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LexicalAnalysis\LexicalAnalysis.csproj">
+      <Project>{EE71DB20-30FF-4117-BA77-DB7B95D60471}</Project>
+      <Name>LexicalAnalysis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SyntaxAnalysis\SyntaxAnalysis.csproj">
       <Project>{88933b43-5fb3-436c-9b3f-8ea1e38ee3b4}</Project>
       <Name>SyntaxAnalysis</Name>
