@@ -59,8 +59,8 @@ namespace SyntaxAnalysis
                     Node e = Expression();
                     if (e == null)
                         throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected expression");
-                    if (_tokens[_index].Category != Tokens.ClosingParenthesis)
-                        throw new SyntaxException(_tokens[_index].Offset, "expected ')'");
+                    if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.ClosingParenthesis)
+                        throw new SyntaxException(_tokens[_index-1].Offset, "expected ')'");
                     _index++;
                     return e;
             }

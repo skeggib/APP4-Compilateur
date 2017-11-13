@@ -67,6 +67,16 @@ namespace CLightCompiler
                         return;
                     }
                 }
+                catch (LexicalException e)
+                {
+                    DisplayError(cLightCode, e.Message, e.Offset);
+                    Exit();
+                }
+                catch (SyntaxException e)
+                {
+                    DisplayError(cLightCode, e.Message, e.Offset);
+                    Exit();
+                }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Cannot compile: {e.Message}");
@@ -85,6 +95,39 @@ namespace CLightCompiler
         private static void Exit()
         {
             Console.ReadKey();
+        }
+
+        private static void DisplayError(string code, string error, int offset)
+        {
+            int lineOffset = 0;
+            int lineNumber = 0;
+            for (int i = 0; i < code.Length && i < offset; i++)
+            {
+                if (code[i] != '\n')
+                    lineOffset++;
+                else
+                {
+                    lineNumber++;
+                    lineOffset = 0;
+                }
+            }
+            string line = code.Split('\n')[lineNumber];
+
+            while (line[0] == ' ' || line[0] == '\t')
+            {
+                line = line.Substring(1);
+                lineOffset--;
+            }
+
+            Console.WriteLine(error + ":\n");
+
+            Console.WriteLine(line);
+
+            for (int i = 0; i < lineOffset; i++)
+                Console.Write("_");
+            Console.Write("^");
+            for (int i = 0; i < line.Length - lineOffset - 2; i++)
+                Console.Write("_");
         }
     }
 }
