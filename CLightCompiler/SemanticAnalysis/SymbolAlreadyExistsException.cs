@@ -7,10 +7,10 @@ using LexicalAnalysis;
 
 namespace SemanticAnalysis
 {
-    public class SymbolAlreadyExistsException : SymbolException // TODO
+    public class SymbolAlreadyExistsException : SemanticException
     {
         public SymbolAlreadyExistsException(Token token) : 
-            base(token)
+            base(token.Offset, "Symbol already exists")
         {
         }
     }

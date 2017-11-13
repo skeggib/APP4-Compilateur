@@ -7,10 +7,10 @@ using LexicalAnalysis;
 
 namespace SemanticAnalysis
 {
-    public class SymbolNotFoundException : SymbolException
+    public class SymbolNotFoundException : SemanticException
     {
         public SymbolNotFoundException(Token token) : 
-            base(token)
+            base(token.Offset, "Symbol not found")
         {
         }
     }

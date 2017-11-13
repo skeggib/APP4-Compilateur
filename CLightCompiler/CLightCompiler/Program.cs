@@ -81,6 +81,11 @@ namespace CLightCompiler
                     DisplayError(cLightCode, e.Message, e.Offset);
                     Exit();
                 }
+                catch (SemanticException e)
+                {
+                    DisplayError(cLightCode, e.Message, e.Offset);
+                    Exit();
+                }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Cannot compile: {e.Message}");
