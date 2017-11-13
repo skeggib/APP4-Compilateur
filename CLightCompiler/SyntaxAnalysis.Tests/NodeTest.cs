@@ -58,5 +58,27 @@ namespace SyntaxAnalysis.Tests
             }
             catch (ArgumentException) { }
         }
+
+        [TestMethod]
+        public void NodeConstructorAssignCategory()
+        {
+            try
+            {
+                Node n = new Node(Nodes.Assign);
+                Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
+            }
+            catch (ArgumentException) { }
+        }
+
+        [TestMethod]
+        public void NodeConstructorDeclarationCategory()
+        {
+            try
+            {
+                Node n = new Node(Nodes.Declaration);
+                Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
+            }
+            catch (ArgumentException) { }
+        }
     }
 }
