@@ -14,7 +14,7 @@ namespace SemanticAnalysis
         public SymbolsTable()
         {
             _stack = new Stack<Dictionary<string, Symbol>>();
-            StartBlock();
+            //StartBlock();
         }
 
         public void StartBlock()

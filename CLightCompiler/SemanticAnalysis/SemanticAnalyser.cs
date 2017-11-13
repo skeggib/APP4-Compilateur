@@ -27,7 +27,7 @@ namespace SemanticAnalysis
                 {
                     Analyse(child);
                 }
-                _table.EndBlock();
+               // _table.EndBlock();
             }
 
             else if (tree.Category == Nodes.Declaration)
@@ -38,6 +38,13 @@ namespace SemanticAnalysis
             else if (tree.Category == Nodes.RefVar || tree.Category == Nodes.Assign)
             {
                 tree.Slot = _table.GetSymbol(tree.Token).Slot;
+            }
+            else
+            {
+                foreach (var child in tree.Childs)
+                {
+                    Analyse(child);
+                }
             }
 
             return _table;

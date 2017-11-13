@@ -19,6 +19,18 @@ namespace CodeGeneration
             return code;
         }
 
+        public string Generate2(Node tree, int nbVar)
+        {
+            string code = string.Empty;
+            code += ".start\n";
+            for(int i = 0; i < nbVar; i++)
+                code += "push.i 0\n";
+            code += _generate(tree);
+            code += "out.i\n";
+            code += "halt\n";
+            return code;
+        }
+
         private  string _generate(Node tree)
         {
             string code = string.Empty;
@@ -110,6 +122,25 @@ namespace CodeGeneration
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
                     code += $"and.i\n";
+                    break;
+
+                case Nodes.RefVar:
+                    code += $"get {tree.Slot}\n";
+                    break;
+
+                case Nodes.Assign:
+                    code += _generate(tree.Childs[0]);
+                    code += $"set {tree.Slot}\n";
+                    break;
+
+                case Nodes.Block:
+                   for(int i = 0; i < tree.Childs.Count; i++)
+                    {
+                        code += _generate(tree.Childs[i]);
+                    }
+                    break;
+
+                case Nodes.Declaration:
                     break;
 
                 default:
