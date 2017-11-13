@@ -19,6 +19,10 @@
         GreaterOrEqual,
         And,
         Or,
-        Not
+        Not,
+        Assign,
+        Block,
+        Condition,
+        Declaration
     }
 }

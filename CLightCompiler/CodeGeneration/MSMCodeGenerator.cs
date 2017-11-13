@@ -25,7 +25,7 @@ namespace CodeGeneration
             switch (tree.Category)
             {
                 case Nodes.Const:
-                    code += $"push.i {tree.Value}\n";
+                    code += $"push.i {tree.Token.Value}\n";
                     break;
 
                 case Nodes.Addition:

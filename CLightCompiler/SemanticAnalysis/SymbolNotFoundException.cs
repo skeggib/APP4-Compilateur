@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using LexicalAnalysis;
 
-namespace Symbols
+namespace SemanticAnalysis
 {
-    public class SymbolAlreadyExistsException : SymbolException // TODO
+    public class SymbolNotFoundException : SymbolException
     {
-        public SymbolAlreadyExistsException(Token token) : 
+        public SymbolNotFoundException(Token token) : 
             base(token)
         {
         }

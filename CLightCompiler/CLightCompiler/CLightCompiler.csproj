@@ -57,6 +57,10 @@
       <Project>{EE71DB20-30FF-4117-BA77-DB7B95D60471}</Project>
       <Name>LexicalAnalysis</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SemanticAnalysis\SemanticAnalysis.csproj">
+      <Project>{4CA16029-FAFF-436B-8D86-693E924D2E45}</Project>
+      <Name>SemanticAnalysis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SyntaxAnalysis\SyntaxAnalysis.csproj">
       <Project>{88933B43-5FB3-436C-9B3F-8EA1E38EE3B4}</Project>
       <Name>SyntaxAnalysis</Name>

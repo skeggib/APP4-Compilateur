@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LexicalAnalysis;
 
-namespace Symbols
+namespace SemanticAnalysis
 {
     public class SymbolException : Exception // TODO
     {

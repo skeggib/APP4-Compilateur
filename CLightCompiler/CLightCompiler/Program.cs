@@ -1,5 +1,6 @@
 ﻿using CodeGeneration;
 using LexicalAnalysis;
+using SemanticAnalysis;
 using SyntaxAnalysis;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace CLightCompiler
 
             LexicalAnalyser lexical = new LexicalAnalyser();
             SyntaxAnalyser syntax = new SyntaxAnalyser();
+            SemanticAnalyser semantics = new SemanticAnalyser();
 
             ICodeGenerator generator = null;
             switch (architecture)
@@ -51,6 +53,7 @@ namespace CLightCompiler
                 {
                     List<Token> tokens = lexical.Convert(cLightCode);
                     Node tree = syntax.Convert(tokens);
+                    SymbolsTable table = semantics.Analyse(tree);
                     string asmCode = generator.Generate(tree);
 
                     try

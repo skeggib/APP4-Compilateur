@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Symbols
+namespace SemanticAnalysis
 {
     public class Symbol
     {
-
+        public int Slot { get; set; }
     }
 }

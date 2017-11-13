@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LexicalAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,28 +15,27 @@ namespace SyntaxAnalysis
 
         public Nodes Category { get; private set; }
 
-        /// <summary>
-        /// Contient la valeur si le noeud est une constante et l'identifiant
-        /// si le noeud est une reference, aleur indeterminee pour les autres
-        /// categories de noeud
-        /// </summary>
-        public string Value { get; private set; }
+        public Token Token { get; private set; }
+
+        public int Slot { get; set; }
 
         public IList<Node> Childs { get; private set; }
 
-        public Node(Nodes category, string value = null, params Node[] childs)
+        public Node(Nodes category, Token token = null, params Node[] childs)
         {
             if ((category == Nodes.Const ||
+                category == Nodes.Assign ||
+                category == Nodes.Declaration ||
                 category == Nodes.RefFunc ||
                 category == Nodes.RefVar) &&
-                value == null)
-                throw new ArgumentException("The value cannot be null if the node is a const or a ref", nameof(value));
+                token == null)
+                throw new ArgumentException("The value cannot be null if the node is a const or a ref", nameof(token));
 
             _id = _globalId;
             _globalId++;
 
             Category = category;
-            Value = value;
+            Token = token;
 
             if (childs != null)
                 Childs = new List<Node>(childs);
@@ -44,7 +44,17 @@ namespace SyntaxAnalysis
         public override string ToString()
         {
             string str = string.Empty;
-            str += $"[{_id}] {Category.ToString()} {{";
+            str += $"[{_id}] {Category.ToString()}";
+
+            if (Category == Nodes.Const)
+                str += $" ({Token.Value})";
+            else if (Category == Nodes.Assign ||
+                Category == Nodes.Declaration ||
+                Category == Nodes.RefFunc ||
+                Category == Nodes.RefVar)
+                str += $" ({Token.Ident})";
+
+            str += $" {{";
 
             for (int i = 0; i < Childs.Count; i++)
             {
@@ -72,10 +82,7 @@ namespace SyntaxAnalysis
             if (other.Category != Category)
                 return false;
 
-            if ((Category == Nodes.Const ||
-                Category == Nodes.RefFunc ||
-                Category == Nodes.RefVar) &&
-                !(other.Value?.Equals(Value) ?? ReferenceEquals(other.Value, Value)))
+            if (!ReferenceEquals(other.Token, Token))
                 return false;
 
             if (other.Childs != null && Childs != null)
