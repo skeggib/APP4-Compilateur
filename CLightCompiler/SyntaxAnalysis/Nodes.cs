@@ -25,6 +25,9 @@
         Condition,
         Declaration,
         Drop,
-        Out
+        Out,
+        Loop,
+        Break,
+        Continue
     }
 }
