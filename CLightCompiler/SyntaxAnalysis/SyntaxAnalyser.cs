@@ -57,7 +57,24 @@ namespace SyntaxAnalysis
                 if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
                 _index++;
-                return e;
+
+                Node d = new Node(Nodes.Drop, null, e);
+                return d;
+            }
+
+            else if(_tokens[_index].Category == Tokens.Out)
+            {
+                _index++;
+                if ((e = Expression()) != null)
+                {
+                    if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+                    _index++;
+
+                    Node o = new Node(Nodes.Out, null, e);
+                    return o;
+                }
+
             }
 
             else if (_tokens[_index].Category == Tokens.If)

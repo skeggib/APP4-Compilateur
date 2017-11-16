@@ -38,6 +38,7 @@
         Reference,
         Pointer,
         Assign,
-        Comma
+        Comma,
+        Out
     }
 }
