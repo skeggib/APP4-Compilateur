@@ -149,6 +149,16 @@ namespace CodeGeneration
                 case Nodes.Declaration:
                     break;
 
+                case Nodes.Drop:
+                    code += _generate(tree.Childs[0]);
+                    code += "drop\n";
+                    break;
+
+                case Nodes.Out:
+                    code += _generate(tree.Childs[0]);
+                    code += "out.i\n"; // TODO out.c
+                    break;
+
                 default:
                     throw new NotImplementedException($"Not implemented node ({tree.Category})");
             }

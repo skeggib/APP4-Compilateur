@@ -15,7 +15,6 @@ namespace LexicalAnalysis
 
             for (int i = 0; i < code.Length; i++)
             {
-                // Si debut de mot cle ou de variable
                 if (IsAlphabeticalCharacter(code[i]) || code[i] == '_')
                 {
                     string word = string.Empty;

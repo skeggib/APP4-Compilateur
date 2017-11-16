@@ -47,6 +47,7 @@ namespace LexicalAnalysis
                     _keyWordsAssociations.Add("return", Tokens.Return);
                     _keyWordsAssociations.Add("int", Tokens.Int);
                     _keyWordsAssociations.Add("void", Tokens.Void);
+                    _keyWordsAssociations.Add("out", Tokens.Out);
                 }
 
                 return _keyWordsAssociations;
