@@ -1,32 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SyntaxAnalysis;
 
 namespace CodeGeneration
 {
     public class MSMCodeGenerator : ICodeGenerator
     {
-        public string Generate(Node tree)
+        public string Generate(Node tree, int nbVars)
         {
             string code = string.Empty;
             code += ".start\n";
-            code += _generate(tree);
-            code += "out.i\n";
-            code += "halt\n";
-            return code;
-        }
-
-        public string Generate2(Node tree, int nbVar)
-        {
-            string code = string.Empty;
-            code += ".start\n";
-            for(int i = 0; i < nbVar; i++)
+            for(int i = 0; i < nbVars; i++)
                 code += "push.i 0\n";
             code += _generate(tree);
-            code += "out.i\n";
             code += "halt\n";
             return code;
         }
@@ -38,6 +23,10 @@ namespace CodeGeneration
             {
                 case Nodes.Const:
                     code += $"push.i {tree.Token.Value}\n";
+                    break;
+
+                case Nodes.RefVar:
+                    code += $"get {tree.Slot}\n";
                     break;
 
                 case Nodes.Addition:
@@ -112,20 +101,20 @@ namespace CodeGeneration
                     code += $"cmpge.i\n";
                     break;
 
-                case Nodes.Or:
-                    code += _generate(tree.Childs[0]);
-                    code += _generate(tree.Childs[1]);
-                    code += $"or.i\n";
-                    break;
-
                 case Nodes.And:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
                     code += $"and.i\n";
                     break;
 
-                case Nodes.RefVar:
-                    code += $"get {tree.Slot}\n";
+                case Nodes.Or:
+                    code += _generate(tree.Childs[0]);
+                    code += _generate(tree.Childs[1]);
+                    code += $"or.i\n";
+                    break;
+
+                case Nodes.Not: // TODO
+                    throw new NotImplementedException();
                     break;
 
                 case Nodes.Assign:
@@ -134,9 +123,26 @@ namespace CodeGeneration
                     break;
 
                 case Nodes.Block:
-                   for(int i = 0; i < tree.Childs.Count; i++)
+                    for(int i = 0; i < tree.Childs.Count; i++)
                     {
                         code += _generate(tree.Childs[i]);
+                    }
+                    break;
+
+                case Nodes.Condition:
+                    string l1 = GetConditionElseLabel();
+                    string l2 = GetConditionEndLabel();
+
+                    code += _generate(tree.Childs[0]);
+                    code += "jumpf " + l1 + "\n";
+                    code += _generate(tree.Childs[1]);
+                    if (tree.Childs.Count > 2)
+                        code += "jump " + l2 + "\n";
+                    code += l1 + "\n";
+                    if (tree.Childs.Count > 2)
+                    {
+                        code += _generate(tree.Childs[2]);
+                        code += l2 + "\n";
                     }
                     break;
 
@@ -147,6 +153,18 @@ namespace CodeGeneration
                     throw new NotImplementedException($"Not implemented node ({tree.Category})");
             }
             return code;
+        }
+
+        private int _conditionElseLabelCounter = 0;
+        private string GetConditionElseLabel()
+        {
+            return ".condElse" + _conditionElseLabelCounter++;
+        }
+
+        private int _conditionEndLabelCounter = 0;
+        private string GetConditionEndLabel()
+        {
+            return ".condEnd" + _conditionEndLabelCounter++;
         }
     }
 }

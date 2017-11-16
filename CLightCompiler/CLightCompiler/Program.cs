@@ -55,7 +55,7 @@ namespace CLightCompiler
                     Node tree = syntax.Convert(tokens);
                     SymbolsTable table = semantics.Analyse(tree);
                     //string asmCode = generator.Generate(tree);
-                    string asmCode = ((MSMCodeGenerator)generator).Generate2(tree, semantics.Counter);
+                    string asmCode = generator.Generate(tree, semantics.Counter);
 
                     try
                     {

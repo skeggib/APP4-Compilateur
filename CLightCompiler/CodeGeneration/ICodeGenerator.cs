@@ -4,6 +4,6 @@ namespace CodeGeneration
 {
     public interface ICodeGenerator
     {
-        string Generate(Node tree);
+        string Generate(Node tree, int nbVars);
     }
 }
