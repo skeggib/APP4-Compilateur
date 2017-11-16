@@ -23,6 +23,8 @@
         Assign,
         Block,
         Condition,
-        Declaration
+        Declaration,
+        Drop,
+        Out
     }
 }
