@@ -5,6 +5,15 @@ namespace CodeGeneration
 {
     public class MSMCodeGenerator : ICodeGenerator
     {
+        private int _indent = 0;
+        private string GetIndentString(int offset = 0)
+        {
+            string str = String.Empty;
+            for (int i = 0; i < _indent + offset; i++)
+                str += "\t";
+            return str;
+        }
+
         public string Generate(Node tree, int nbVars)
         {
             string code = string.Empty;
@@ -22,95 +31,95 @@ namespace CodeGeneration
             switch (tree.Category)
             {
                 case Nodes.Const:
-                    code += $"push.i {tree.Token.Value}\n";
+                    code += $"push.i {tree.Token.Value}\t\t\t;\n";
                     break;
 
                 case Nodes.RefVar:
-                    code += $"get {tree.Slot}\n";
+                    code += $"get {tree.Slot}\t\t\t\t;{GetIndentString()}var {tree.Token.Ident} ->\n";
                     break;
 
                 case Nodes.Addition:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"add.i\n";
+                    code += $"add.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Substraction:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"sub.i\n";
+                    code += $"sub.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Multiplication:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"mul.i\n";
+                    code += $"mul.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Division:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"div.i\n";
+                    code += $"div.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Modulo:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"mod.i\n";
+                    code += $"mod.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Negative:
-                    code += $"push.i 0\n";
+                    code += $"push.i 0\t\t\t;\n";
                     code += _generate(tree.Childs[0]);
-                    code += $"sub.i\n";
+                    code += $"sub.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.AreEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpeq.i\n";
+                    code += $"cmpeq.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.AreNotEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpne.i\n";
+                    code += $"cmpne.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.LowerThan:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmplt.i\n";
+                    code += $"cmplt.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.LowerOrEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmple.i\n";
+                    code += $"cmple.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.GreaterThan:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpgt.i\n";
+                    code += $"cmpgt.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.GreaterOrEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpge.i\n";
+                    code += $"cmpge.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.And:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"and.i\n";
+                    code += $"and.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Or:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"or.i\n";
+                    code += $"or.i\t\t\t\t;\n";
                     break;
 
                 case Nodes.Not: // TODO
@@ -119,7 +128,7 @@ namespace CodeGeneration
 
                 case Nodes.Assign:
                     code += _generate(tree.Childs[0]);
-                    code += $"set {tree.Slot}\n";
+                    code += $"set {tree.Slot} \t\t\t\t;{GetIndentString()}var {tree.Token.Ident} <-\n";
                     break;
 
                 case Nodes.Block:
@@ -133,17 +142,27 @@ namespace CodeGeneration
                     string l1 = GetConditionElseLabel();
                     string l2 = GetConditionEndLabel();
 
+                    _indent++;
+
+                    code += $"\t\t\t\t\t;{GetIndentString(-1)}if\n";
                     code += _generate(tree.Childs[0]);
-                    code += "jumpf " + l1 + "\n";
+                    code += $"jumpf {l1}\t\t;\n";
+                    code += $"\t\t\t\t\t;{GetIndentString(-1)}then\n";
                     code += _generate(tree.Childs[1]);
                     if (tree.Childs.Count > 2)
-                        code += "jump " + l2 + "\n";
-                    code += l1 + "\n";
+                    {
+                        code += $"jump " + l2 + "\t\t;\n";
+                        code += $"\t\t\t\t\t;{GetIndentString(-1)}else\n";
+                    }
+                    code += $"." + l1 + "\t\t\t;\n";
                     if (tree.Childs.Count > 2)
                     {
                         code += _generate(tree.Childs[2]);
-                        code += l2 + "\n";
+                        code += "." + l2 + "\t\t\t;\n";
                     }
+                    code += $"\t\t\t\t\t;{GetIndentString(-1)}endif\n";
+
+                    _indent--;
                     break;
 
                 case Nodes.Declaration:
@@ -168,13 +187,13 @@ namespace CodeGeneration
         private int _conditionElseLabelCounter = 0;
         private string GetConditionElseLabel()
         {
-            return ".condElse" + _conditionElseLabelCounter++;
+            return "else_" + String.Format("{0:0000}", _conditionElseLabelCounter++);
         }
 
         private int _conditionEndLabelCounter = 0;
         private string GetConditionEndLabel()
         {
-            return ".condEnd" + _conditionEndLabelCounter++;
+            return "endif" + String.Format("{0:0000}", _conditionEndLabelCounter++);
         }
     }
 }

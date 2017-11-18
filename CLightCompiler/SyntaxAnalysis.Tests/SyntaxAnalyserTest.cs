@@ -16,25 +16,27 @@ namespace SyntaxAnalysis.Tests
             List<Token> tokens = new LexicalAnalyser().Convert(clCode);
             Node actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree = 
-            new Node(Nodes.Or, null,
-                new Node(Nodes.And, null,
-                    new Node(Nodes.Not, null,
-                        new Node(Nodes.Const, tokens[1])
-                    ),
-                    new Node(Nodes.LowerThan, null,
-                        new Node(Nodes.Const, tokens[3]),
-                        new Node(Nodes.Const, tokens[5])
-                    )
-                ),
-                new Node(Nodes.AreEqual, null,
-                    new Node(Nodes.Const, tokens[7]),
-                    new Node(Nodes.AreNotEqual, null,
-                        new Node(Nodes.Addition, null,
-                            new Node(Nodes.Const, tokens[10]),
-                            new Node(Nodes.Const, tokens[12])
+            Node expectedTree =
+            new Node(Nodes.Drop, null,
+                new Node(Nodes.Or, null,
+                    new Node(Nodes.And, null,
+                        new Node(Nodes.Not, null,
+                            new Node(Nodes.Const, tokens[1])
                         ),
-                        new Node(Nodes.Const, tokens[14])
+                        new Node(Nodes.LowerThan, null,
+                            new Node(Nodes.Const, tokens[3]),
+                            new Node(Nodes.Const, tokens[5])
+                        )
+                    ),
+                    new Node(Nodes.AreEqual, null,
+                        new Node(Nodes.Const, tokens[7]),
+                        new Node(Nodes.AreNotEqual, null,
+                            new Node(Nodes.Addition, null,
+                                new Node(Nodes.Const, tokens[10]),
+                                new Node(Nodes.Const, tokens[12])
+                            ),
+                            new Node(Nodes.Const, tokens[14])
+                        )
                     )
                 )
             );
@@ -114,6 +116,44 @@ namespace SyntaxAnalysis.Tests
                         )
                     )
                 )
+            );
+
+            Assert.AreEqual(expectedTree, actualTree);
+        }
+
+        [TestMethod]
+        public void SyntaxAnalyserWhile()
+        {
+            string clCode = @"
+{
+    int i;
+    i = 0;
+    while (i < 10)
+    {
+        out i;
+        i = i + 1;
+    }
+}
+";
+
+            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
+            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+
+            Node expectedTree =
+            new Node(Nodes.Block, null,
+                new Node(Nodes.Declaration, tokens[2]),
+                new Node(Nodes.Assign, tokens[4], new Node(Nodes.Const, tokens[6])),
+                new Node(Nodes.Loop, null, new Node(Nodes.Condition, null,
+                    new Node(Nodes.LowerThan, null, new Node(Nodes.RefVar, tokens[10]), new Node(Nodes.Const, tokens[12])),
+                    new Node(Nodes.Block, null,
+                        new Node(Nodes.Out, null, new Node(Nodes.RefVar, tokens[16])),
+                        new Node(Nodes.Assign, tokens[18], new Node(Nodes.Addition, null,
+                            new Node(Nodes.RefVar, tokens[20]),
+                            new Node(Nodes.Const, tokens[22])
+                        ))
+                    ),
+                    new Node(Nodes.Break)
+                ))
             );
 
             Assert.AreEqual(expectedTree, actualTree);
