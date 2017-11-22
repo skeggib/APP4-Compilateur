@@ -20,7 +20,7 @@ namespace SyntaxAnalysis
             return Statement();
         }
 
-        // S -> { S* } | A; | E; | if (E) S (else S)? | int ident;
+        // S -> { S* } | A; | E; | if (E) S (else S)? | int ident; | while(E)S | do S while(E); | for(A; E; A)S | break; | continue; 
         private Node Statement()
         {
             if (_index >= _tokens.Count)
@@ -62,7 +62,7 @@ namespace SyntaxAnalysis
                 return d;
             }
 
-            else if(_tokens[_index].Category == Tokens.Out)
+            else if (_tokens[_index].Category == Tokens.Out)
             {
                 _index++;
                 if ((e = Expression()) != null)
@@ -120,6 +120,96 @@ namespace SyntaxAnalysis
                 return new Node(Nodes.Declaration, token);
             }
 
+            else if (_tokens[_index].Category == Tokens.While)
+            {
+                _index++;
+                Node p;
+                if (_index >= _tokens.Count ||
+                    _tokens[_index].Category != Tokens.OpeningParenthesis ||
+                    (p = Primary()) == null)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected primary");
+
+                Node s = Statement();
+                if (_index >= _tokens.Count || s == null)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected while body");
+
+                Node break_node = new Node(Nodes.Break, null);
+                Node cond = new Node(Nodes.Condition, null, p, s, break_node);
+                Node while_loop = new Node(Nodes.Loop, null, cond);
+                return while_loop;
+            }
+
+            else if (_tokens[_index].Category == Tokens.Do)
+            {
+                _index++;
+                Node s;
+                if (_index >= _tokens.Count || (s = Statement()) == null)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected primary");
+
+                if (_tokens[_index].Category == Tokens.While)
+                {
+                    _index++;
+                    Node p;
+                    if (_index >= _tokens.Count ||
+                        _tokens[_index].Category != Tokens.OpeningParenthesis ||
+                        (p = Primary()) == null)
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "Expected primary");
+
+                    if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
+                        throw new SyntaxException(_tokens[_index].Offset, "Expected ';'");
+                    _index++;
+
+                    Node break_node = new Node(Nodes.Break);
+                    Node continue_node = new Node(Nodes.Continue);
+                    Node cond = new Node(Nodes.Condition, null, p, continue_node, break_node);
+                    Node block_node = new Node(Nodes.Block, null, s, cond);
+                    Node loop_node = new Node(Nodes.Loop, null, block_node);
+                    return loop_node;
+                }
+            }
+
+            else if (_tokens[_index].Category == Tokens.For)
+            {
+                _index++;
+                if(_index>=_tokens.Count || _tokens[_index].Category != Tokens.OpeningParenthesis)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected opening parenthesis");
+
+                _index++;
+                Node init;
+                if (_index >= _tokens.Count || (init = Affectation())==null )
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected initialisateur");
+
+                _index++;
+                if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+
+                _index++;
+                Node expre;
+                if (_index >= _tokens.Count || (expre = Expression())==null )
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected expression");
+
+                if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+
+                _index++;
+                Node post_op;
+                if (_index >= _tokens.Count || (post_op = Affectation()) == null)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected initialisateur");
+
+                if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.ClosingParenthesis)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ')'");
+
+                _index++;
+                Node s;
+                if (_index >= _tokens.Count || (s = Statement()) == null)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected for body");
+
+                Node body_node = new Node(Nodes.Block, null, s, post_op);
+                Node cond_node = new Node(Nodes.Condition, null, expre, body_node, new Node(Nodes.Break));
+                Node loop_node = new Node(Nodes.Loop, null, cond_node);
+                Node for_node = new Node(Nodes.Block, null, init, loop_node);
+                return for_node;
+            }
             return null;
         }
 
