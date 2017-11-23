@@ -186,7 +186,9 @@ namespace SyntaxAnalysis.Tests
                                 new Node(Nodes.Const, tokens[12])
                             ),
                             new Node(Nodes.Block, null,
-                                new Node(Nodes.Out, null, new Node(Nodes.RefVar, tokens[22])),
+                                new Node(Nodes.Block, null,
+                                    new Node(Nodes.Out, null, new Node(Nodes.RefVar, tokens[22]))
+                                ),
                                 new Node(Nodes.Assign, tokens[14],
                                     new Node(Nodes.Addition, null,
                                         new Node(Nodes.RefVar, tokens[16]),
