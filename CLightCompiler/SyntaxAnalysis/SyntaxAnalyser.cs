@@ -179,7 +179,6 @@ namespace SyntaxAnalysis
                 if (_index >= _tokens.Count || (init = Affectation())==null )
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected initialisateur");
 
-                _index++;
                 if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
 
@@ -210,6 +209,12 @@ namespace SyntaxAnalysis
                 Node for_node = new Node(Nodes.Block, null, init, loop_node);
                 return for_node;
             }
+
+            else if(_tokens[_index].Category == Tokens.Break)
+                return new Node(Nodes.Break, _tokens[_index++]);
+
+            else if(_tokens[_index].Category == Tokens.Continue)
+                return new Node(Nodes.Continue, _tokens[_index++]);
             return null;
         }
 

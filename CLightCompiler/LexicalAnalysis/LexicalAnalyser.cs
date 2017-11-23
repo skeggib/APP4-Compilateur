@@ -52,13 +52,16 @@ namespace LexicalAnalysis
                     word += code[i];
                     if(i < code.Length - 1 && IsNumericalCharacter(code[i + 1]))
                     {
+                        i++;
                         while (i < code.Length && IsNumericalCharacter(code[i]))
                         {
-                            i++;
+                            //i++;
                             if (i < code.Length && IsAlphabeticalCharacter(code[i]))
                                 throw new LexicalException(offset, code[i].ToString());
                             word += code[i];
+                            i++;
                         }
+                        i--;
                     }
                     else if(i < code.Length - 1 && IsAlphabeticalCharacter(code[i + 1]))
                         throw new LexicalException(offset, code[i].ToString());

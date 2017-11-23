@@ -18,14 +18,21 @@ namespace SemanticAnalysis
             _table = new SymbolsTable();
         }
 
+
         public SymbolsTable Analyse(Node tree)
+        {
+            AnalyseLoop(tree);
+            return AnalyseSymbols(tree);
+        }
+
+        public SymbolsTable AnalyseSymbols(Node tree)
         {
             if (tree.Category == Nodes.Block)
             {
                 _table.StartBlock();
                 foreach (var child in tree.Childs)
                 {
-                    Analyse(child);
+                    AnalyseSymbols(child);
                 }
                 _table.EndBlock();
             }
@@ -44,18 +51,29 @@ namespace SemanticAnalysis
                 tree.Slot = _table.GetSymbol(tree.Token).Slot;
                 foreach (var child in tree.Childs)
                 {
-                    Analyse(child);
+                    AnalyseSymbols(child);
                 }
             }
             else
             {
                 foreach (var child in tree.Childs)
                 {
-                    Analyse(child);
+                    AnalyseSymbols(child);
                 }
             }
 
             return _table;
+        }
+
+
+        private void AnalyseLoop(Node tree)
+        {
+            if (tree.Category == Nodes.Loop)
+                return;
+            else if (tree.Category == Nodes.Break || tree.Category == Nodes.Continue)
+                throw new SemanticException(tree.Token.Offset, $"Break ou continue n'est pas dans une boucle");
+            foreach (var child in tree.Childs)
+                AnalyseLoop(child);
         }
     }
 }
