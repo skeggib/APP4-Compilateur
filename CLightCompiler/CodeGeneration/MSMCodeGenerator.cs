@@ -1,5 +1,7 @@
 ﻿using System;
 using SyntaxAnalysis;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CodeGeneration
 {
@@ -31,7 +33,7 @@ namespace CodeGeneration
             switch (tree.Category)
             {
                 case Nodes.Const:
-                    code += $"push.i {tree.Token.Value}\t\t\t;\n";
+                    code += $"push.i {tree.Token.Value}\t\t\t;{GetIndentString()}const {tree.Token.Value} ->\n";
                     break;
 
                 case Nodes.RefVar:
@@ -41,85 +43,85 @@ namespace CodeGeneration
                 case Nodes.Addition:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"add.i\t\t\t\t;\n";
+                    code += $"add.i\t\t\t\t;{GetIndentString()}+\n";
                     break;
 
                 case Nodes.Substraction:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"sub.i\t\t\t\t;\n";
+                    code += $"sub.i\t\t\t\t;{GetIndentString()}-\n";
                     break;
 
                 case Nodes.Multiplication:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"mul.i\t\t\t\t;\n";
+                    code += $"mul.i\t\t\t\t;{GetIndentString()}*\n";
                     break;
 
                 case Nodes.Division:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"div.i\t\t\t\t;\n";
+                    code += $"div.i\t\t\t\t;{GetIndentString()}/\n";
                     break;
 
                 case Nodes.Modulo:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"mod.i\t\t\t\t;\n";
+                    code += $"mod.i\t\t\t\t;{GetIndentString()}%\n";
                     break;
 
                 case Nodes.Negative:
-                    code += $"push.i 0\t\t\t;\n";
+                    code += $"push.i 0\t\t\t;{GetIndentString()}const 0 ->\n";
                     code += _generate(tree.Childs[0]);
-                    code += $"sub.i\t\t\t\t;\n";
+                    code += $"sub.i\t\t\t\t;{GetIndentString()}-\n";
                     break;
 
                 case Nodes.AreEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpeq.i\t\t\t\t;\n";
+                    code += $"cmpeq.i\t\t\t\t;{GetIndentString()}==\n";
                     break;
 
                 case Nodes.AreNotEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpne.i\t\t\t\t;\n";
+                    code += $"cmpne.i\t\t\t\t;{GetIndentString()}!=\n";
                     break;
 
                 case Nodes.LowerThan:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmplt.i\t\t\t\t;\n";
+                    code += $"cmplt.i\t\t\t\t;{GetIndentString()}<\n";
                     break;
 
                 case Nodes.LowerOrEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmple.i\t\t\t\t;\n";
+                    code += $"cmple.i\t\t\t\t;{GetIndentString()}<=\n";
                     break;
 
                 case Nodes.GreaterThan:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpgt.i\t\t\t\t;\n";
+                    code += $"cmpgt.i\t\t\t\t;{GetIndentString()}>\n";
                     break;
 
                 case Nodes.GreaterOrEqual:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"cmpge.i\t\t\t\t;\n";
+                    code += $"cmpge.i\t\t\t\t;{GetIndentString()}>=\n";
                     break;
 
                 case Nodes.And:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"and.i\t\t\t\t;\n";
+                    code += $"and.i\t\t\t\t;{GetIndentString()}&&\n";
                     break;
 
                 case Nodes.Or:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += $"or.i\t\t\t\t;\n";
+                    code += $"or.i\t\t\t\t;{GetIndentString()}||\n";
                     break;
 
                 case Nodes.Not: // TODO
@@ -146,19 +148,19 @@ namespace CodeGeneration
 
                     code += $"\t\t\t\t\t;{GetIndentString(-1)}if\n";
                     code += _generate(tree.Childs[0]);
-                    code += $"jumpf {l1}\t\t;\n";
+                    code += $"jumpf {l1}\t;\n";
                     code += $"\t\t\t\t\t;{GetIndentString(-1)}then\n";
                     code += _generate(tree.Childs[1]);
                     if (tree.Childs.Count > 2)
                     {
-                        code += $"jump " + l2 + "\t\t;\n";
+                        code += $"jump " + l2 + "\t;\n";
                         code += $"\t\t\t\t\t;{GetIndentString(-1)}else\n";
                     }
-                    code += $"." + l1 + "\t\t\t;\n";
+                    code += $"." + l1 + "\t\t;\n";
                     if (tree.Childs.Count > 2)
                     {
                         code += _generate(tree.Childs[2]);
-                        code += "." + l2 + "\t\t\t;\n";
+                        code += "." + l2 + "\t\t;\n";
                     }
                     code += $"\t\t\t\t\t;{GetIndentString(-1)}endif\n";
 
@@ -175,7 +177,23 @@ namespace CodeGeneration
 
                 case Nodes.Out:
                     code += _generate(tree.Childs[0]);
-                    code += "out.i\n"; // TODO out.c
+                    code += $"out.i\t\t\t\t;{GetIndentString()}disp\n"; // TODO out.c
+                    break;
+
+                case Nodes.Loop:
+                    code += $".{GetLoopBeginningLabel()}\t\t;{GetIndentString()}loop\n";
+                    _indent++;
+                    code += _generate(tree.Childs[0]);
+                    _indent--;
+                    code += $".{GetLoopEndLabel()}\t\t;{GetIndentString()}endloop\n";
+                    break;
+
+                case Nodes.Continue:
+                    code += $"jump {GetCurrentLoopBeginningLabel()}\t;{GetIndentString()}continue\n";
+                    break;
+
+                case Nodes.Break:
+                    code += $"jump {GetCurrentLoopEndLabel()}\t;{GetIndentString()}break\n";
                     break;
 
                 default:
@@ -187,13 +205,39 @@ namespace CodeGeneration
         private int _conditionElseLabelCounter = 0;
         private string GetConditionElseLabel()
         {
-            return "else_" + String.Format("{0:0000}", _conditionElseLabelCounter++);
+            return "else___" + String.Format("{0:0000}", _conditionElseLabelCounter++);
         }
 
         private int _conditionEndLabelCounter = 0;
         private string GetConditionEndLabel()
         {
-            return "endif" + String.Format("{0:0000}", _conditionEndLabelCounter++);
+            return "endif__" + String.Format("{0:0000}", _conditionEndLabelCounter++);
+        }
+
+        private int _loopNumber;
+        private Stack<int> _loopNumberStack = new Stack<int>();
+
+        private string GetLoopBeginningLabel()
+        {
+            _loopNumberStack.Push(_loopNumber++);
+            return GetCurrentLoopBeginningLabel();
+        }
+
+        private string GetCurrentLoopBeginningLabel()
+        {
+            return $"loop___{String.Format("{0:0000}", _loopNumberStack.Peek())}";
+        }
+
+        private string GetLoopEndLabel()
+        {
+            string label = GetCurrentLoopEndLabel();
+            _loopNumberStack.Pop();
+            return label;
+        }
+
+        private string GetCurrentLoopEndLabel()
+        {
+            return $"endloop{String.Format("{0:0000}", _loopNumberStack.Peek())}";
         }
     }
 }

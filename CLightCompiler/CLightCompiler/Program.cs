@@ -88,7 +88,7 @@ namespace CLightCompiler
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Cannot compile: {e.Message}");
+                    Console.WriteLine($"Cannot compile: {e.Message}\n{e.StackTrace}");
                     Exit();
                     return;
                 }
