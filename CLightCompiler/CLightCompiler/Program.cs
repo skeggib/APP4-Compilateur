@@ -1,5 +1,6 @@
 ﻿using CodeGeneration;
 using LexicalAnalysis;
+using MSMEmulator;
 using SemanticAnalysis;
 using SyntaxAnalysis;
 using System;
@@ -17,13 +18,24 @@ namespace CLightCompiler
                 Console.WriteLine($"Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
                 Console.WriteLine("List of availables architecture:");
                 Console.WriteLine("- msm (default)");
+                Console.WriteLine("List of options:");
+                Console.WriteLine("--run (runs the compiled program in an emulator)");
                 Exit();
                 return;
             }
 
-            string inputPath = args[0];
-            string outputPath = args[1];
-            string architecture = args.Length > 2 ? args[2] : "msm";
+            List<string> argsList = new List<string>(args);
+
+            bool run = false;
+            if (argsList.Contains("--run"))
+            {
+                run = true;
+                argsList.Remove("--run");
+            }
+
+            string inputPath = argsList[0];
+            string outputPath = argsList[1];
+            string architecture = argsList.Count > 2 ? argsList[2] : "msm";
 
             LexicalAnalyser lexical = new LexicalAnalyser();
             SyntaxAnalyser syntax = new SyntaxAnalyser();
@@ -56,6 +68,12 @@ namespace CLightCompiler
                     SymbolsTable table = semantics.Analyse(tree);
                     //string asmCode = generator.Generate(tree);
                     string asmCode = generator.Generate(tree, semantics.Counter);
+
+                    if (run)
+                    {
+                        Console.WriteLine(new MSMEmulator.MSMEmulator(asmCode).Run());
+                        Console.ReadKey();
+                    }
 
                     try
                     {

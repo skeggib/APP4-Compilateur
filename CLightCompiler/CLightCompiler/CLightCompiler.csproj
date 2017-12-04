@@ -57,6 +57,10 @@
       <Project>{EE71DB20-30FF-4117-BA77-DB7B95D60471}</Project>
       <Name>LexicalAnalysis</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MSMEmulator\MSMEmulator.csproj">
+      <Project>{FF7AA159-DD0C-4DA9-B0FB-3BBB3224EAE9}</Project>
+      <Name>MSMEmulator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SemanticAnalysis\SemanticAnalysis.csproj">
       <Project>{4CA16029-FAFF-436B-8D86-693E924D2E45}</Project>
       <Name>SemanticAnalysis</Name>
