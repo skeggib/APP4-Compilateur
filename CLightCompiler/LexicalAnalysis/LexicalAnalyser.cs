@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace LexicalAnalysis
 {
@@ -11,9 +7,9 @@ namespace LexicalAnalysis
     {
         public List<Token> Convert(string code)
         {
-            List<Token> tokens = new List<Token>();
+            var tokens = new List<Token>();
 
-            for (int i = 0; i < code.Length; i++)
+            for (var i = 0; i < code.Length; i++)
             {
                 if (IsAlphabeticalCharacter(code[i]) || code[i] == '_')
                 {
@@ -78,10 +74,10 @@ namespace LexicalAnalysis
                     if (i < code.Length - 1 && IsValidSpecialCharacter(code[i + 1]))
                     {
                         var qDoubleSpecialChars = from specialChar in Token.SpecialCharactersAssociations
-                                                  where specialChar.Key.Count() == 2 && specialChar.Key[0] == code[i]
+                                                  where specialChar.Key.Length == 2 && specialChar.Key[0] == code[i]
                                                   select specialChar.Key;
 
-                        if (qDoubleSpecialChars.Count() > 0)
+                        if (qDoubleSpecialChars.Any())
                         {
                             i++;
                             word += code[i];

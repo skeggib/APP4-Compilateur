@@ -53,7 +53,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.RefFunc);
+                Node n = new Node(Nodes.Call);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
             }
             catch (ArgumentException) { }
@@ -75,7 +75,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.Declaration);
+                Node n = new Node(Nodes.DeclVar);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
             }
             catch (ArgumentException) { }

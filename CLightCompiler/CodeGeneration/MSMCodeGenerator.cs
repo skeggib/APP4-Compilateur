@@ -167,7 +167,7 @@ namespace CodeGeneration
                     _indent--;
                     break;
 
-                case Nodes.Declaration:
+                case Nodes.DeclVar:
                     break;
 
                 case Nodes.Drop:

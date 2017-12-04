@@ -37,7 +37,7 @@ namespace SemanticAnalysis
                 _table.EndBlock();
             }
 
-            else if (tree.Category == Nodes.Declaration)
+            else if (tree.Category == Nodes.DeclVar)
             {
                 _table.AddSymbol(tree.Token).Slot = Counter++;
             }

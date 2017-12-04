@@ -51,11 +51,15 @@ namespace CLightCompiler
 
                 try
                 {
-                    List<Token> tokens = lexical.Convert(cLightCode);
-                    Node tree = syntax.Convert(tokens);
-                    SymbolsTable table = semantics.Analyse(tree);
-                    //string asmCode = generator.Generate(tree);
-                    string asmCode = generator.Generate(tree, semantics.Counter);
+                    var tokens = lexical.Convert(cLightCode);
+                    var tree = syntax.Convert(tokens);
+
+                    Console.WriteLine(tree);
+                    Console.ReadKey();
+                    return;
+
+                    semantics.Analyse(tree);
+                    var asmCode = generator.Generate(tree, semantics.Counter);
 
                     try
                     {

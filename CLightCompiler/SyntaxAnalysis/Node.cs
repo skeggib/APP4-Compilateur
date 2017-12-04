@@ -17,6 +17,8 @@ namespace SyntaxAnalysis
 
         public Token Token { get; private set; }
 
+        public List<Token> Tokens { get; }
+
         public int Slot { get; set; }
 
         public IList<Node> Childs { get; private set; }
@@ -25,8 +27,8 @@ namespace SyntaxAnalysis
         {
             if ((category == Nodes.Const ||
                 category == Nodes.Assign ||
-                category == Nodes.Declaration ||
-                category == Nodes.RefFunc ||
+                category == Nodes.DeclVar ||
+                category == Nodes.Call ||
                 category == Nodes.RefVar) &&
                 token == null)
                 throw new ArgumentException("The value cannot be null if the node is a const or a ref", nameof(token));
@@ -39,6 +41,8 @@ namespace SyntaxAnalysis
 
             if (childs != null)
                 Childs = new List<Node>(childs);
+
+            Tokens = new List<Token>();
         }
 
         public override string ToString()
@@ -49,10 +53,26 @@ namespace SyntaxAnalysis
             if (Category == Nodes.Const)
                 str += $" ({Token.Value})";
             else if (Category == Nodes.Assign ||
-                Category == Nodes.Declaration ||
-                Category == Nodes.RefFunc ||
+                Category == Nodes.DeclVar ||
+                Category == Nodes.Call ||
                 Category == Nodes.RefVar)
                 str += $" ({Token.Ident})";
+            else if (Category == Nodes.DeclFunc)
+            {
+                str += $" {Token.Ident}(";
+                if (Tokens.Count == 0)
+                    str += "void";
+                else
+                {
+                    for (var i = 0; i < Tokens.Count; ++i)
+                    {
+                        if (i != 0)
+                            str += ",";
+                        str += $"{Tokens[i].Ident}";
+                    }
+                }
+                str += ")";
+            }
 
             str += $" {{";
 

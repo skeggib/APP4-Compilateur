@@ -17,10 +17,94 @@ namespace SyntaxAnalysis
             _tokens = tokens;
             _index = 0;
 
-            return Statement();
+            return Program();
         }
 
-        // S -> { S* } | A; | E; | if (E) S (else S)? | int ident; | while(E)S | do S while(E); | for(A; E; A)S | break; | continue; 
+        // Z -> D*
+        private Node Program()
+        {
+            var z = new Node(Nodes.Program);
+
+            Node d;
+            do
+            {
+                d = DeclarationFunc();
+                if (d != null)
+                    z.Childs.Add(d);
+            } while (d != null);
+
+            return z;
+        }
+
+        // D -> 'int' ident '(' ('int' ident)* ')' S
+        private Node DeclarationFunc()
+        {
+            if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Int)
+            {
+                _index++; // On mange 'int'
+
+                if (_index == _tokens.Count || _tokens[_index].Category != Tokens.Ident)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected identifier");
+
+                var d = new Node(Nodes.DeclFunc, _tokens[_index]);
+
+                _index++; // On mange ident
+
+                if (_index == _tokens.Count || _tokens[_index].Category != Tokens.OpeningParenthesis)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected '('");
+
+                _index++; // On mange '('
+
+                if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Int)
+                {
+                    _index++; // On mange 'int'
+                    if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Ident)
+                    {
+                        d.Tokens.Add(_tokens[_index]);
+                        _index++; // On mange ident
+                    }
+                    else
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "Expected identifier");
+
+                    while (_index < _tokens.Count && _tokens[_index].Category == Tokens.Comma)
+                    {
+                        _index++; // On mange ','
+
+                        if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Int)
+                        {
+                            _index++; // On mange 'int'
+                            if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Ident)
+                            {
+                                d.Tokens.Add(_tokens[_index]);
+                                _index++; // On mange ident
+                            }
+                            else
+                                throw new SyntaxException(_tokens[_index - 1].Offset, "Expected identifier");
+                        }
+                        
+                        else
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "Expected 'int'");
+                    }
+                }
+
+                if (_index < _tokens.Count && _tokens[_index].Category == Tokens.ClosingParenthesis)
+                    _index++; // On mange ')'
+                else
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ')'");
+
+                var s = Statement();
+                if (s == null)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected statement");
+
+                d.Childs.Add(s);
+
+                return d;
+            }
+
+            return null;
+        }
+
+        // S -> { S* } | A; | E; | if (E) S (else S)? | int ident; | while(E)S | do S while(E); | for(A; E; A)S | break; | continue; | return E;
         private Node Statement()
         {
             if (_index >= _tokens.Count)
@@ -117,7 +201,7 @@ namespace SyntaxAnalysis
                     throw new SyntaxException(_tokens[_index].Offset, "Expected ';'");
                 _index++;
 
-                return new Node(Nodes.Declaration, token);
+                return new Node(Nodes.DeclVar, token);
             }
 
             else if (_tokens[_index].Category == Tokens.While)
@@ -210,11 +294,24 @@ namespace SyntaxAnalysis
                 return for_node;
             }
 
-            else if(_tokens[_index].Category == Tokens.Break)
+            else if (_tokens[_index].Category == Tokens.Break)
                 return new Node(Nodes.Break, _tokens[_index++]);
 
-            else if(_tokens[_index].Category == Tokens.Continue)
+            else if (_tokens[_index].Category == Tokens.Continue)
                 return new Node(Nodes.Continue, _tokens[_index++]);
+
+            else if (_tokens[_index].Category == Tokens.Return)
+            {
+                _index++; // On mange 'return'
+                var expression = Expression();
+                if (expression == null)
+                    throw new SyntaxException(_tokens[_index].Offset, "Expected expression");
+                if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Semicolon)
+                    return new Node(Nodes.Return, null, expression);
+                
+                throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+            }
+
             return null;
         }
 
@@ -241,7 +338,7 @@ namespace SyntaxAnalysis
             return null;
         }
 
-        // P -> ident | const | -P | !P | (E)
+        // P -> ident ['(' E? | E(,E)* ')']? | const | -P | !P | (E)
         private Node Primary()
         {
             if (_index >= _tokens.Count)
@@ -251,6 +348,39 @@ namespace SyntaxAnalysis
             {
                 case Tokens.Ident:
                     _index++;
+
+                    if (_index < _tokens.Count && _tokens[_index].Category == Tokens.OpeningParenthesis)
+                    {
+                        var call = new Node(Nodes.Call, _tokens[_index - 1]);
+
+                        _index++; // On mange '('
+
+                        var expression = Expression();
+
+                        while (expression != null)
+                        {
+                            call.Childs.Add(expression);
+
+                            if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Comma)
+                            {
+                                _index++; // On mange ','
+                                expression = Expression();
+                                if (expression == null)
+                                    throw new SyntaxException(_tokens[_index].Offset, "Expected expression");
+                            }
+
+                            else
+                                break;
+                        }
+
+                        if (_index < _tokens.Count && _tokens[_index].Category == Tokens.ClosingParenthesis)
+                            _index++;
+                        else
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ')'");
+
+                        return call;
+                    }
+
                     return new Node(Nodes.RefVar, _tokens[_index - 1]);
 
                 case Tokens.Value:

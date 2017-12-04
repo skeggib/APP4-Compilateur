@@ -4,7 +4,7 @@
     {
         Const,
         RefVar,
-        RefFunc,
+        Call,
         Addition,
         Substraction,
         Multiplication,
@@ -23,11 +23,14 @@
         Assign,
         Block,
         Condition,
-        Declaration,
+        DeclVar,
+        DeclFunc,
         Drop,
         Out,
         Loop,
         Break,
-        Continue
+        Continue,
+        Return,
+        Program
     }
 }
