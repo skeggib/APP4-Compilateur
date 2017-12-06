@@ -13,6 +13,7 @@ namespace LexicalAnalysis
         /// Position du premier caractere responsable dans le fichier source
         /// </summary>
         public int Offset { get; private set; }
+        
         /// <summary>
         /// Texte reponsable de l'exception
         /// </summary>

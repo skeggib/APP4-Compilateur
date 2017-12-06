@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using LexicalAnalysis;
 
@@ -11,12 +10,12 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void SyntaxAnalyserArithmeticsAndLogic()
         {
-            string clCode = "!2 && 3 < 5 || 1 == (2 + 3 != 5);";
+            const string clCode = "!2 && 3 < 5 || 1 == (2 + 3 != 5);";
 
-            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
-            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree =
+            var expectedTree =
             new Node(Nodes.Drop, null,
                 new Node(Nodes.Or, null,
                     new Node(Nodes.And, null,
@@ -47,17 +46,17 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void SyntaxAnalyserDeclarationAndAssignments()
         {
-            string clCode = @"
+            const string clCode = @"
 {
     int i;
     i = 0;
 }
 ";
 
-            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
-            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree =
+            var expectedTree =
             new Node(Nodes.Block, null,
                 new Node(Nodes.DeclVar, tokens[2]),
                 new Node(Nodes.Assign, tokens[4],
@@ -71,7 +70,7 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void SyntaxAnalyserIfElse()
         {
-            string clCode = @"
+            const string clCode = @"
 {
     int i;
     i = 0;
@@ -86,10 +85,10 @@ namespace SyntaxAnalysis.Tests
 }
 ";
 
-            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
-            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree =
+            var expectedTree =
             new Node(Nodes.Block, null,
                 new Node(Nodes.DeclVar, tokens[2]),
                 new Node(Nodes.Assign, tokens[4],
@@ -124,7 +123,7 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void SyntaxAnalyserWhile()
         {
-            string clCode = @"
+            const string clCode = @"
 {
     int i;
     i = 0;
@@ -136,10 +135,10 @@ namespace SyntaxAnalysis.Tests
 }
 ";
 
-            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
-            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree =
+            var expectedTree =
             new Node(Nodes.Block, null,
                 new Node(Nodes.DeclVar, tokens[2]),
                 new Node(Nodes.Assign, tokens[4], new Node(Nodes.Const, tokens[6])),
@@ -162,7 +161,7 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void SyntaxAnalyserFor()
         {
-            string clCode = @"
+            const string clCode = @"
 {
     int i;
     for (i = 0; i < 10; i = i + 1) {
@@ -171,10 +170,10 @@ namespace SyntaxAnalysis.Tests
 }
 ";
 
-            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
-            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree =
+            var expectedTree =
             new Node(Nodes.Block, null,
                 new Node(Nodes.DeclVar, tokens[2]),
                 new Node(Nodes.Block, null,
@@ -208,20 +207,74 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void SyntaxAnalyserCall()
         {
-            string clCode = @"
+            const string clCode = @"
 {
     toto(1, 2);
 }
 ";
 
-            List<Token> tokens = new LexicalAnalyser().Convert(clCode);
-            Node actualTree = new SyntaxAnalyser().Convert(tokens);
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            Node expectedTree = new Node(Nodes.Block, null, 
+            var expectedTree = new Node(Nodes.Block, null, 
                 new Node(Nodes.Drop, null,
                     new Node(Nodes.Call, tokens[1],
                         new Node(Nodes.Const, tokens[3]),
                         new Node(Nodes.Const, tokens[5]))));
+
+            Assert.AreEqual(expectedTree, actualTree);
+        }
+
+        [TestMethod]
+        public void SyntaxAnalyserDeclareFunctionIntNoParams()
+        {
+            const string clCode = @"
+int main() {
+    out 3 + 5;
+}
+";
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
+
+            var expectedTree = new Node(Nodes.Program, null,
+                new Node(Nodes.DeclFunc, tokens[1],
+                    new Node(Nodes.Block, null,
+                        new Node(Nodes.Out, null,
+                            new Node(Nodes.Addition, null,
+                                new Node(Nodes.Const, tokens[6]),
+                                new Node(Nodes.Const, tokens[8])
+                            )
+                        )
+                    )
+                )
+            );
+
+            Assert.AreEqual(expectedTree, actualTree);
+        }
+
+        [TestMethod]
+        public void SyntaxAnalyserDeclareFunctionIntWithParams()
+        {
+            const string clCode = @"
+int main(int a) {
+    out a + 5;
+}
+";
+            var tokens = new LexicalAnalyser().Convert(clCode);
+            var actualTree = new SyntaxAnalyser().Convert(tokens);
+
+            var expectedTree = new Node(Nodes.Program, null,
+                new Node(Nodes.DeclFunc, tokens[1],
+                    new Node(Nodes.Block, null,
+                        new Node(Nodes.Out, null,
+                            new Node(Nodes.Addition, null,
+                                new Node(Nodes.RefVar, tokens[8]),
+                                new Node(Nodes.Const, tokens[10])
+                            )
+                        )
+                    )
+                ) { Tokens = { tokens[4] } }
+            );
 
             Assert.AreEqual(expectedTree, actualTree);
         }

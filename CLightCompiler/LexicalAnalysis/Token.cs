@@ -23,97 +23,85 @@ namespace LexicalAnalysis
         /// Position du token dans le fichier source
         /// </summary>
         public int Offset { get; set; }
-
-        private static Dictionary<string, Tokens> _keyWordsAssociations;
+        
         /// <summary>
         /// Association des mot-cles aux categories de token
         /// </summary>
-        public static Dictionary<string, Tokens> KeyWordsAssociations
+        public static readonly Dictionary<string, Tokens> KeyWordsAssociations = new Dictionary<string, Tokens>
         {
-            get
-            {
-                if (_keyWordsAssociations == null)
-                {
-                    _keyWordsAssociations = new Dictionary<string, Tokens>();
-                    _keyWordsAssociations.Add("if", Tokens.If);
-                    _keyWordsAssociations.Add("else", Tokens.Else);
-                    _keyWordsAssociations.Add("for", Tokens.For);
-                    _keyWordsAssociations.Add("while", Tokens.While);
-                    _keyWordsAssociations.Add("do", Tokens.Do);
-                    _keyWordsAssociations.Add("break", Tokens.Break);
-                    _keyWordsAssociations.Add("continue", Tokens.Continue);
-                    _keyWordsAssociations.Add("return", Tokens.Return);
-                    _keyWordsAssociations.Add("int", Tokens.Int);
-                    _keyWordsAssociations.Add("void", Tokens.Void);
-                    _keyWordsAssociations.Add("out", Tokens.Out);
-                }
-
-                return _keyWordsAssociations;
-            }
-        }
-
-        private static Dictionary<string, Tokens> _specialCharactersAssociations;
+            {"if", Tokens.If},
+            {"else", Tokens.Else},
+            {"for", Tokens.For},
+            {"while", Tokens.While},
+            {"do", Tokens.Do},
+            {"break", Tokens.Break},
+            {"continue", Tokens.Continue},
+            {"return", Tokens.Return},
+            {"int", Tokens.Int},
+            {"void", Tokens.Void},
+            {"out", Tokens.Out}
+        };
+        
         /// <summary>
         /// Association des caracteres speciaux aux categories de token
         /// </summary>
-        public static Dictionary<string, Tokens> SpecialCharactersAssociations
+        public static readonly Dictionary<string, Tokens> SpecialCharactersAssociations = new Dictionary<string, Tokens>
         {
-            get
-            {
-                if (_specialCharactersAssociations == null)
-                {
-                    _specialCharactersAssociations = new Dictionary<string, Tokens>();
-                    _specialCharactersAssociations.Add("(", Tokens.OpeningParenthesis);
-                    _specialCharactersAssociations.Add(")", Tokens.ClosingParenthesis);
-                    _specialCharactersAssociations.Add("{", Tokens.OpeningBrace);
-                    _specialCharactersAssociations.Add("}", Tokens.ClosingBrace);
-                    _specialCharactersAssociations.Add("[", Tokens.OpeningBracket);
-                    _specialCharactersAssociations.Add("]", Tokens.ClosingBracket);
-                    _specialCharactersAssociations.Add(";", Tokens.Semicolon);
-                    _specialCharactersAssociations.Add("=", Tokens.Assign);
-                    _specialCharactersAssociations.Add("+", Tokens.Plus);
-                    _specialCharactersAssociations.Add("-", Tokens.Minus);
-                    _specialCharactersAssociations.Add("*", Tokens.Multiply);
-                    _specialCharactersAssociations.Add("/", Tokens.Divide);
-                    _specialCharactersAssociations.Add("%", Tokens.Modulo);
-                    _specialCharactersAssociations.Add("==", Tokens.Equals);
-                    _specialCharactersAssociations.Add("!=", Tokens.NotEquals);
-                    _specialCharactersAssociations.Add("<", Tokens.LowerThan);
-                    _specialCharactersAssociations.Add(">", Tokens.GreaterThan);
-                    _specialCharactersAssociations.Add("<=", Tokens.LowerOrEqual);
-                    _specialCharactersAssociations.Add(">=", Tokens.GreaterOrEqual);
-                    _specialCharactersAssociations.Add("&&", Tokens.And);
-                    _specialCharactersAssociations.Add("||", Tokens.Or);
-                    _specialCharactersAssociations.Add("!", Tokens.Not);
-                    _specialCharactersAssociations.Add("&", Tokens.Reference);
-                    _specialCharactersAssociations.Add("@", Tokens.Pointer);
-                    _specialCharactersAssociations.Add(",", Tokens.Comma);
-                }
+            {"(", Tokens.OpeningParenthesis},
+            {")", Tokens.ClosingParenthesis},
+            {"{", Tokens.OpeningBrace},
+            {"}", Tokens.ClosingBrace},
+            {"[", Tokens.OpeningBracket},
+            {"]", Tokens.ClosingBracket},
+            {";", Tokens.Semicolon},
+            {"=", Tokens.Assign},
+            {"+", Tokens.Plus},
+            {"-", Tokens.Minus},
+            {"*", Tokens.Multiply},
+            {"/", Tokens.Divide},
+            {"%", Tokens.Modulo},
+            {"==", Tokens.Equals},
+            {"!=", Tokens.NotEquals},
+            {"<", Tokens.LowerThan},
+            {">", Tokens.GreaterThan},
+            {"<=", Tokens.LowerOrEqual},
+            {">=", Tokens.GreaterOrEqual},
+            {"&&", Tokens.And},
+            {"||", Tokens.Or},
+            {"!", Tokens.Not},
+            {"&", Tokens.Reference},
+            {"@", Tokens.Pointer},
+            {",", Tokens.Comma}
+        };
+        
 
-                return _specialCharactersAssociations;
-            }
-        }
-
-        private static HashSet<char> _specialCharacters;
         /// <summary>
         /// Caracteres speciaux autorises
         /// </summary>
-        public static HashSet<char> SpecialCharacters
+        public static readonly HashSet<char> SpecialCharacters = new HashSet<char>
         {
-            get
-            {
-                if (_specialCharacters == null)
-                {
-                    _specialCharacters = new HashSet<char> { '(', ')', '{', '}', '[', ']', ';', '=', '+', '-', '*', '/', '%', '!', '<', '>', '&', '|', '@', ',' };
-                }
-
-                return _specialCharacters;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
+            '(',
+            ')',
+            '{',
+            '}',
+            '[',
+            ']',
+            ';',
+            '=',
+            '+',
+            '-',
+            '*',
+            '/',
+            '%',
+            '!',
+            '<',
+            '>',
+            '&',
+            '|',
+            '@',
+            ','
+        };
+        
         /// <param name="category">Categorie du token</param>
         /// <param name="offset">Position dans le fichier source</param>
         public Token(Tokens category, int offset)
@@ -150,18 +138,18 @@ namespace LexicalAnalysis
                 return Value;
             }
 
-            else if (Token.KeyWordsAssociations.ContainsValue(Category))
+            else if (KeyWordsAssociations.ContainsValue(Category))
             {
-                foreach (KeyValuePair<string, Tokens> item in Token.KeyWordsAssociations)
+                foreach (KeyValuePair<string, Tokens> item in KeyWordsAssociations)
                 {
                     if (item.Value == Category)
                         return item.Key;
                 }
             }
 
-            else if (Token.SpecialCharactersAssociations.ContainsValue(Category))
+            else if (SpecialCharactersAssociations.ContainsValue(Category))
             {
-                foreach (KeyValuePair<string, Tokens> item in Token.SpecialCharactersAssociations)
+                foreach (KeyValuePair<string, Tokens> item in SpecialCharactersAssociations)
                 {
                     if (item.Value == Category)
                         return item.Key;
