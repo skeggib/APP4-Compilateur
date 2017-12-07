@@ -46,6 +46,7 @@ namespace SemanticAnalysis
             {
                 tree.Slot = _table.GetSymbol(tree.Token).Slot;
             }
+
             else if(tree.Category == Nodes.Assign)
             {
                 tree.Slot = _table.GetSymbol(tree.Token).Slot;
@@ -54,6 +55,24 @@ namespace SemanticAnalysis
                     AnalyseSymbols(child);
                 }
             }
+
+            else if(tree.Category == Nodes.DeclFunc)
+            {
+                _table.AddSymbol(tree.Token);
+                _table.StartBlock();
+                foreach(var param in tree.Tokens)
+                {
+                    _table.AddSymbol(param).Slot = Counter++;
+                }
+                AnalyseSymbols(tree.Childs[0]);
+                _table.EndBlock();
+            }
+
+            else if(tree.Category == Nodes.Call)
+            {
+                _table.GetSymbol(tree.Token);
+            }
+
             else
             {
                 foreach (var child in tree.Childs)

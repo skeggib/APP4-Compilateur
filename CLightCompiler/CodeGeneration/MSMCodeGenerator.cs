@@ -196,6 +196,35 @@ namespace CodeGeneration
                     code += $"jump {GetCurrentLoopEndLabel()}\t;{GetIndentString()}break\n";
                     break;
 
+                case Nodes.DeclFunc:
+                    code += $".{tree.Token.Ident}\n";
+                    for(int i=0; i< tree.Childs.Count; ++i)
+                        code += $"push.i 999\n"; // eviter de mettre 0 pour l'initialisation
+                    code+=_generate(tree.Childs[0]);
+                    code += "push.i 0\n";
+                    code += "ret\n";
+                    break;
+
+                case Nodes.Call:
+                    code += $"prep {tree.Token.Ident}\n";
+                    foreach(var child in tree.Childs)
+                        code += _generate(child);
+                    code += $"call {tree.Childs.Count}\n"; 
+                    break;
+
+                case Nodes.Return:
+                    code += _generate(tree.Childs[0]);
+                    code += "ret\n";
+                    break;
+
+                case Nodes.Program:
+                    code += ".start\n";
+                    code += "prep main\n";
+                    code += "call 0\n";
+                    code += "halt\n";
+                    foreach (var child in tree.Childs)
+                        code += _generate(child);
+                    break;
                 default:
                     throw new NotImplementedException($"Not implemented node ({tree.Category})");
             }

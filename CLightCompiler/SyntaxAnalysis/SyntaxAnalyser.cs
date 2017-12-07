@@ -18,6 +18,7 @@ namespace SyntaxAnalysis
             _index = 0;
 
             return Program();
+            //return Statement();
         }
 
         // Z -> D*
