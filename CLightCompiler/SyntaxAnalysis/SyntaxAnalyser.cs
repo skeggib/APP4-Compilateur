@@ -308,7 +308,10 @@ namespace SyntaxAnalysis
                 if (expression == null)
                     throw new SyntaxException(_tokens[_index].Offset, "Expected expression");
                 if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Semicolon)
+                {
+                    _index++; // On mange ';'
                     return new Node(Nodes.Return, null, expression);
+                }
                 
                 throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
             }
@@ -316,30 +319,81 @@ namespace SyntaxAnalysis
             return null;
         }
 
-        // A -> ident = E
+        // A -> *ident = E | ident ('['E']')? = E
         private Node Affectation()
         {
             if (_index >= _tokens.Count)
                 return null;
 
-            if (_tokens[_index].Category == Tokens.Ident)
+            if (_tokens[_index].Category == Tokens.Asterisk)
+            {
+                _index++; // On mange '*'
+
+                if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Ident)
+                {
+                    var indirSet = new Node(Nodes.IndirSet, _tokens[_index]);
+                    _index++; // On mange l'ident
+
+                    if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Assign)
+                    {
+                        _index++; // On mange '='
+
+                        var expression = Expression();
+                        if (expression == null)
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "Expected expression");
+
+                        indirSet.Childs.Add(expression);
+
+                        return indirSet;
+                    }
+                    else
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "Expected '='");
+                }
+                else
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected identifier");
+            }
+
+            else if (_tokens[_index].Category == Tokens.Ident) // TODO Tester si le equal est necessaire ou non
             {
                 Token token = _tokens[_index];
-                if (_index < _tokens.Count && _tokens[_index + 1].Category == Tokens.Assign)
+                _index++; // On mange l'ident
+
+                Node node = null;
+
+                if (_index < _tokens.Count && _tokens[_index].Category == Tokens.OpeningBracket)
                 {
-                    _index += 2;
+                    _index++; // On mange '['
+                    var expression = Expression();
+                    if (expression == null)
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "Expression expected");
+                    if (_index < _tokens.Count && _tokens[_index].Category == Tokens.ClosingBracket)
+                    {
+                        _index++; // On mange ']'
+                        node = new Node(Nodes.IndexSet, token, expression);
+                    }
+                    else
+                        throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ']'");
+                }
+
+                else
+                    node = new Node(Nodes.Assign, token);
+
+                if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Assign)
+                {
+                    _index++; // On mange '='
                     Node e = Expression();
                     if (e == null)
                         throw new SyntaxException(_tokens[_index + 1].Offset, "Expression expected");
-
-                    return new Node(Nodes.Assign, token, e);
+                    node.Childs.Add(e);
                 }
+
+                return node;
             }
 
             return null;
         }
 
-        // P -> ident ['(' E? | E(,E)* ')']? | const | -P | !P | (E)
+        // P -> *ident | ident [ ('(' E? | E(,E)* ')') | '['E']' ]? | const | -P | !P | (E)
         private Node Primary()
         {
             if (_index >= _tokens.Count)
@@ -347,9 +401,18 @@ namespace SyntaxAnalysis
 
             switch (_tokens[_index].Category)
             {
+                case Tokens.Asterisk:
+                    _index++; // On mange '*'
+
+                    if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Ident)
+                        return new Node(Nodes.Indir, _tokens[_index++]);
+                    else
+                        throw new SyntaxException(_tokens[_index].Offset, "Expected identifier");
+
                 case Tokens.Ident:
                     _index++;
 
+                    // Si '(' apres identifiant
                     if (_index < _tokens.Count && _tokens[_index].Category == Tokens.OpeningParenthesis)
                     {
                         var call = new Node(Nodes.Call, _tokens[_index - 1]);
@@ -380,6 +443,28 @@ namespace SyntaxAnalysis
                             throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ')'");
 
                         return call;
+                    }
+
+                    // Si '[' apres identifiant
+                    else if (_index < _tokens.Count && _tokens[_index].Category == Tokens.OpeningBracket)
+                    {
+                        var index = new Node(Nodes.Index, _tokens[_index - 1]);
+
+                        _index++; // On mange '['
+
+                        var expression = Expression();
+
+                        if (expression == null)
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "Expected expression");
+
+                        index.Childs.Add(expression);
+
+                        if (_index < _tokens.Count && _tokens[_index].Category == Tokens.ClosingBracket)
+                            _index++; // On mange ']'
+                        else
+                            throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ']'");
+
+                        return index;
                     }
 
                     return new Node(Nodes.RefVar, _tokens[_index - 1]);
@@ -434,7 +519,7 @@ namespace SyntaxAnalysis
                 return p;
 
             Node op = null;
-            if (_tokens[_index].Category == Tokens.Multiply)
+            if (_tokens[_index].Category == Tokens.Asterisk)
                 op = new Node(Nodes.Multiplication, null, p);
             else if (_tokens[_index].Category == Tokens.Divide)
                 op = new Node(Nodes.Division, null, p);

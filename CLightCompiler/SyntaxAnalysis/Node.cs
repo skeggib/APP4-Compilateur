@@ -23,6 +23,8 @@ namespace SyntaxAnalysis
 
         public IList<Node> Childs { get; private set; }
 
+        public int VarCount;
+
         public Node(Nodes category, Token token = null, params Node[] childs)
         {
             if ((category == Nodes.Const ||

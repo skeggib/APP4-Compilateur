@@ -19,11 +19,7 @@ namespace CodeGeneration
         public string Generate(Node tree, int nbVars)
         {
             string code = string.Empty;
-            code += ".start\n";
-            for(int i = 0; i < nbVars; i++)
-                code += "push.i 0\n";
             code += _generate(tree);
-            code += "halt\n";
             return code;
         }
 
@@ -198,7 +194,7 @@ namespace CodeGeneration
 
                 case Nodes.DeclFunc:
                     code += $".{tree.Token.Ident}\n";
-                    for(int i=0; i< tree.Childs.Count; ++i)
+                    for (int i = 0; i < tree.VarCount; ++i)
                         code += $"push.i 999\n"; // eviter de mettre 0 pour l'initialisation
                     code+=_generate(tree.Childs[0]);
                     code += "push.i 0\n";
@@ -225,6 +221,33 @@ namespace CodeGeneration
                     foreach (var child in tree.Childs)
                         code += _generate(child);
                     break;
+
+                case Nodes.Indir:
+                    code += "get " + tree.Slot + "\n";
+                    code += "read\n";
+                    break;
+
+                case Nodes.Index:
+                    code += "get " + tree.Slot + "\n";
+                    code += _generate(tree.Childs[0]);
+                    code += "add.i\n";
+                    code += "read\n";
+                    break;
+
+                case Nodes.IndirSet:
+                    code += "get " + tree.Slot + "\n";
+                    code += _generate(tree.Childs[0]);
+                    code += "write\n";
+                    break;
+
+                case Nodes.IndexSet:
+                    code += "get " + tree.Slot + "\n";
+                    code += _generate(tree.Childs[0]);
+                    code += "add.i\n";
+                    code += _generate(tree.Childs[1]);
+                    code += "write\n";
+                    break;
+
                 default:
                     throw new NotImplementedException($"Not implemented node ({tree.Category})");
             }

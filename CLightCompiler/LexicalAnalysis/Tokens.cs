@@ -23,7 +23,7 @@
         Semicolon,
         Plus,
         Minus,
-        Multiply,
+        Asterisk,
         Divide,
         Modulo,
         Equals,
@@ -36,7 +36,6 @@
         Or,
         Not,
         Reference,
-        Pointer,
         Assign,
         Comma,
         Out

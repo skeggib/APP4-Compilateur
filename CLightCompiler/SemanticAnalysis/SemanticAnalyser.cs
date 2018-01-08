@@ -66,11 +66,15 @@ namespace SemanticAnalysis
                 }
                 AnalyseSymbols(tree.Childs[0]);
                 _table.EndBlock();
+                tree.VarCount = Counter - tree.Tokens.Count;
+                Counter = 0;
             }
 
             else if(tree.Category == Nodes.Call)
             {
                 _table.GetSymbol(tree.Token);
+                foreach (var param in tree.Childs)
+                    param.Slot = _table.GetSymbol(param.Token).Slot;
             }
 
             else

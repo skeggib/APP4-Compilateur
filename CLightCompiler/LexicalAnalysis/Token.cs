@@ -57,7 +57,7 @@ namespace LexicalAnalysis
             {"=", Tokens.Assign},
             {"+", Tokens.Plus},
             {"-", Tokens.Minus},
-            {"*", Tokens.Multiply},
+            {"*", Tokens.Asterisk},
             {"/", Tokens.Divide},
             {"%", Tokens.Modulo},
             {"==", Tokens.Equals},
@@ -70,7 +70,6 @@ namespace LexicalAnalysis
             {"||", Tokens.Or},
             {"!", Tokens.Not},
             {"&", Tokens.Reference},
-            {"@", Tokens.Pointer},
             {",", Tokens.Comma}
         };
         

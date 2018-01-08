@@ -31,6 +31,10 @@
         Break,
         Continue,
         Return,
-        Program
+        Program,
+        Indir,
+        Index,
+        IndirSet,
+        IndexSet
     }
 }
