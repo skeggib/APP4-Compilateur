@@ -1,9 +1,6 @@
 ﻿using LexicalAnalysis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SyntaxAnalysis
 {
@@ -17,7 +14,7 @@ namespace SyntaxAnalysis
 
         public Token Token { get; private set; }
 
-        public List<Token> Tokens { get; }
+        public List<Token> Tokens;
 
         public int Slot { get; set; }
 
@@ -33,7 +30,7 @@ namespace SyntaxAnalysis
                 category == Nodes.Call ||
                 category == Nodes.RefVar) &&
                 token == null)
-                throw new ArgumentException("The value cannot be null if the node is a const or a ref", nameof(token));
+                throw new ArgumentException("The value cannot be null if the node is a const or a ref", "token");
 
             _id = _globalId;
             _globalId++;
@@ -50,18 +47,18 @@ namespace SyntaxAnalysis
         public override string ToString()
         {
             string str = string.Empty;
-            str += $"[{_id}] {Category.ToString()}";
+            str += "[" + _id + "]" + Category.ToString();
 
             if (Category == Nodes.Const)
-                str += $" ({Token.Value})";
+                str += "(" + Token.Value + ")";
             else if (Category == Nodes.Assign ||
                 Category == Nodes.DeclVar ||
                 Category == Nodes.Call ||
                 Category == Nodes.RefVar)
-                str += $" ({Token.Ident})";
+                str += "(" + Token.Ident + ")";
             else if (Category == Nodes.DeclFunc)
             {
-                str += $" {Token.Ident}(";
+                str += Token.Ident + "(";
                 if (Tokens.Count == 0)
                     str += "void";
                 else
@@ -70,13 +67,13 @@ namespace SyntaxAnalysis
                     {
                         if (i != 0)
                             str += ",";
-                        str += $"{Tokens[i].Ident}";
+                        str += Tokens[i].Ident;
                     }
                 }
                 str += ")";
             }
 
-            str += $" {{";
+            str += "{";
 
             for (int i = 0; i < Childs.Count; i++)
             {
@@ -97,7 +94,7 @@ namespace SyntaxAnalysis
 
         public override bool Equals(object obj)
         {
-            Node other = obj as Node;
+            var other = obj as Node;
             if (other == null)
                 return false;
 
