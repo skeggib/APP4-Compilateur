@@ -375,8 +375,14 @@ namespace SyntaxAnalysis
                         throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ']'");
                 }
 
-                else
+                else if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Assign)
                     node = new Node(Nodes.Assign, token);
+
+                else
+                {
+                    _index--;
+                    return null;
+                }
 
                 if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Assign)
                 {
