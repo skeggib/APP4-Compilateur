@@ -74,17 +74,17 @@ namespace LexicalAnalysis
                 {
                     var word = string.Empty;
                     var offset = i;
-
+                    
                     word += code[i];
                     // On teste si ce n'est pas une instruction a deux caracteres comme '&&'
                     if (i < code.Length - 1 && IsValidSpecialCharacter(code[i + 1]))
                     {
                         // On cherche tout les caracteres speciaux valides qui sont composes de deux caracteres et qui commencent par le caractere trouve
                         var qDoubleSpecialChars = from specialChar in Token.SpecialCharactersAssociations
-                                                  where specialChar.Key.Length == 2 && specialChar.Key[0] == code[i]
+                                                  where specialChar.Key.Length == 2 && specialChar.Key[0] == code[i] && specialChar.Key[1] == code[i+1]
                                                   select specialChar.Key;
 
-                        // Si on an a trouve un, on ajoute le deuxieme caractere au mot
+                        // Si on en a trouve un, on ajoute le deuxieme caractere au mot
                         if (qDoubleSpecialChars.Any())
                             word += code[++i];
                     }

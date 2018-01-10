@@ -105,7 +105,7 @@ namespace SyntaxAnalysis
             return null;
         }
 
-        // S -> { S* } | A; | E; | if (E) S (else S)? | int ident; | while(E)S | do S while(E); | for(A; E; A)S | break; | continue; | return E;
+        // S -> { S* } | A; | E; | if (E) S (else S)? | int ident; | while(E)S | do S while(E) | for(A; E; A)S | break; | continue; | return E;
         private Node Statement()
         {
             if (_index >= _tokens.Count)
@@ -240,9 +240,9 @@ namespace SyntaxAnalysis
                         (p = Primary()) == null)
                         throw new SyntaxException(_tokens[_index - 1].Offset, "Expected primary");
 
-                    if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
-                        throw new SyntaxException(_tokens[_index].Offset, "Expected ';'");
-                    _index++;
+                    //if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
+                    //    throw new SyntaxException(_tokens[_index].Offset, "Expected ';'");
+                    //_index++;
 
                     Node break_node = new Node(Nodes.Break);
                     Node continue_node = new Node(Nodes.Continue);
