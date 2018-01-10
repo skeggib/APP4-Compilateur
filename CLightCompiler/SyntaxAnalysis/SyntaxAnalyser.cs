@@ -207,7 +207,7 @@ namespace SyntaxAnalysis
 
             else if (_tokens[_index].Category == Tokens.While)
             {
-                _index++;
+                _index++; //On mange "while"
                 Node p;
                 if (_index >= _tokens.Count ||
                     _tokens[_index].Category != Tokens.OpeningParenthesis ||
@@ -296,10 +296,24 @@ namespace SyntaxAnalysis
             }
 
             else if (_tokens[_index].Category == Tokens.Break)
-                return new Node(Nodes.Break, _tokens[_index++]);
+            {
+                _index++; //On mange le "break"
+                if (_index >= _tokens.Count ||_tokens[_index].Category != Tokens.Semicolon )
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+                _index++;
+                return new Node(Nodes.Break, null);
+            }
+                
 
             else if (_tokens[_index].Category == Tokens.Continue)
-                return new Node(Nodes.Continue, _tokens[_index++]);
+            {
+                _index++; //On mange le "continue"
+                if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
+                    throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+                _index++;
+                return new Node(Nodes.Continue,null);
+            }
+                
 
             else if (_tokens[_index].Category == Tokens.Return)
             {

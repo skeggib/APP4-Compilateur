@@ -120,8 +120,9 @@ namespace CodeGeneration
                     code += "or.i\t\t\t\t;" + GetIndentString() + "||\n";
                     break;
 
-                case Nodes.Not: // TODO
-                    throw new NotImplementedException("Not implemented node (" + tree.Category + ")");
+                case Nodes.Not:
+                    code += _generate(tree.Childs[0]);
+                    code += $"not\n";
                     break;
 
                 case Nodes.Assign:
@@ -181,6 +182,7 @@ namespace CodeGeneration
                     _indent++;
                     code += _generate(tree.Childs[0]);
                     _indent--;
+                    code += "jump " + GetCurrentLoopBeginningLabel() + "\n";
                     code += "." + GetLoopEndLabel() + "\t\t;" + GetIndentString() + "endloop\n";
                     break;
 
