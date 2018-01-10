@@ -1,0 +1,1 @@
+- Les codes sans fonction main doivent compiler

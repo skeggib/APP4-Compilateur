@@ -14,7 +14,7 @@ namespace SyntaxAnalysis
         public int Offset { get; private set; }
 
         public SyntaxException(int offset, string reason)
-            : base($"Syntax error: {reason} at offset {offset}")
+            : base("Syntax error: " + reason + " at offset " + offset)
         {
             Offset = offset;
         }

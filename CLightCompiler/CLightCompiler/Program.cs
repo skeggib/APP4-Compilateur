@@ -14,7 +14,7 @@ namespace CLightCompiler
         {
             if (args.Length < 2)
             {
-                Console.WriteLine($"Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
+                Console.WriteLine("Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
                 Console.WriteLine("List of availables architecture:");
                 Console.WriteLine("- msm (default)");
                 Exit();
@@ -36,7 +36,7 @@ namespace CLightCompiler
                     generator = new MSMCodeGenerator();
                     break;
                 default:
-                    Console.WriteLine($"Unknown architecture: {architecture}");
+                    Console.WriteLine("Unknown architecture: " + architecture);
                     Exit();
                     return;
             }
@@ -65,7 +65,7 @@ namespace CLightCompiler
                     }
                     catch (Exception)
                     {
-                        Console.WriteLine($"Cannot write file {outputPath}");
+                        Console.WriteLine("Cannot write file " + outputPath);
                         Exit();
                         return;
                     }
@@ -87,14 +87,14 @@ namespace CLightCompiler
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Cannot compile: {e.Message}\n{e.StackTrace}");
+                    Console.WriteLine("Cannot compile: "+ e.Message + "\n" + e.StackTrace);
                     Exit();
                     return;
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine($"Cannot read file {inputPath}");
+                Console.WriteLine("Cannot read file " + inputPath);
                 Exit();
                 return;
             }
@@ -102,7 +102,7 @@ namespace CLightCompiler
 
         private static void Exit()
         {
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         private static void DisplayError(string code, string error, int offset)
@@ -136,6 +136,8 @@ namespace CLightCompiler
             Console.Write("^");
             for (int i = 0; i < line.Length - lineOffset - 2; i++)
                 Console.Write("_");
+
+            Console.WriteLine("");
         }
     }
 }

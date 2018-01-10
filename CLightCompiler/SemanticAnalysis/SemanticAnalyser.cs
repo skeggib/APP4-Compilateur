@@ -94,7 +94,7 @@ namespace SemanticAnalysis
             if (tree.Category == Nodes.Loop)
                 return;
             if (tree.Category == Nodes.Break || tree.Category == Nodes.Continue)
-                throw new SemanticException(tree.Token.Offset, $"Break ou continue n'est pas dans une boucle");
+                throw new SemanticException(tree.Token.Offset, "Break ou continue n'est pas dans une boucle");
             foreach (var child in tree.Childs)
                 AnalyseLoop(child);
         }

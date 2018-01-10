@@ -10,7 +10,7 @@ namespace SemanticAnalysis
         public int Offset { get; private set; }
 
         public SemanticException(int offset, string reason)
-            : base($"Semantic error: {reason} at offset {offset}")
+            : base("Semantic error: " + reason + " at offset " + offset)
         {
             Offset = offset;
         }
