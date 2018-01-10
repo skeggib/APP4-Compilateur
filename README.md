@@ -7,7 +7,7 @@ Sébastien Klasa
 
 Prérequis :
 
-- mono-devel (testé avec la version 3.2.8)
+- mono-devel (testé avec la version 4.2.1)
 - Une larme de rhinocéros
 
 Compilation :
