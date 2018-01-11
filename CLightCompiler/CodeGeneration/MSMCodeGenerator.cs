@@ -111,13 +111,13 @@ namespace CodeGeneration
                 case Nodes.And:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += "and.i\t\t\t\t;" + GetIndentString() + "&&\n";
+                    code += "and\t\t\t\t;" + GetIndentString() + "&&\n";
                     break;
 
                 case Nodes.Or:
                     code += _generate(tree.Childs[0]);
                     code += _generate(tree.Childs[1]);
-                    code += "or.i\t\t\t\t;" + GetIndentString() + "||\n";
+                    code += "or\t\t\t\t;" + GetIndentString() + "||\n";
                     break;
 
                 case Nodes.Not:
