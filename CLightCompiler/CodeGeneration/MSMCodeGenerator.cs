@@ -16,7 +16,7 @@ namespace CodeGeneration
             return str;
         }
 
-        public string Generate(Node tree, int nbVars)
+        public string Generate(Node tree)
         {
             string code = string.Empty;
             code += _generate(tree);

@@ -54,7 +54,7 @@ namespace CLightCompiler
                     var tokens = lexical.Convert(cLightCode);
                     var tree = syntax.Convert(tokens);
                     semantics.Analyse(tree);
-                    var asmCode = generator.Generate(tree, semantics.Counter);
+                    var asmCode = generator.Generate(tree);
 
                     try
                     {
