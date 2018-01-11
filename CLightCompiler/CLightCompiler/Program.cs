@@ -102,7 +102,7 @@ namespace CLightCompiler
 
         private static void Exit()
         {
-            //Console.ReadKey();
+            Console.ReadKey();
         }
 
         private static void DisplayError(string code, string error, int offset)

@@ -74,7 +74,10 @@ namespace SemanticAnalysis
             {
                 _table.GetSymbol(tree.Token);
                 foreach (var param in tree.Childs)
-                    param.Slot = _table.GetSymbol(param.Token).Slot;
+                {
+                    if (param.Token?.Category == LexicalAnalysis.Tokens.Ident)
+                        param.Slot = _table.GetSymbol(param.Token).Slot;
+                }
             }
 
             else
