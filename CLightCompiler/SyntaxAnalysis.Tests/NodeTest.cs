@@ -1,16 +1,19 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using LexicalAnalysis;
 
 namespace SyntaxAnalysis.Tests
 {
     [TestClass]
     public class NodeTest
     {
+        private Token _tokenDefault = new Token(Tokens.Void, 0);
+
         [TestMethod]
         public void NodeConstructorCategory()
         {
-            Node n = new Node(Nodes.Addition);
+            Node n = new Node(Nodes.Addition, _tokenDefault);
             Assert.AreEqual(Nodes.Addition, n.Category);
         }
 
@@ -18,8 +21,8 @@ namespace SyntaxAnalysis.Tests
         public void NodeConstructorChilds()
         {
             Node n = new Node(Nodes.Addition, null,
-                new Node(Nodes.Addition),
-                new Node(Nodes.Substraction));
+                new Node(Nodes.Addition, _tokenDefault),
+                new Node(Nodes.Substraction, _tokenDefault));
 
             Assert.AreEqual(2, n.Childs.Count);
             Assert.AreEqual(Nodes.Addition, n.Childs[0].Category);
@@ -31,7 +34,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.Const);
+                Node n = new Node(Nodes.Const, _tokenDefault);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud const avec une valeur nulle");
             }
             catch (ArgumentException) { }
@@ -42,7 +45,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.RefVar);
+                Node n = new Node(Nodes.RefVar, _tokenDefault);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
             }
             catch (ArgumentException) { }
@@ -53,7 +56,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.Call);
+                Node n = new Node(Nodes.Call, _tokenDefault);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
             }
             catch (ArgumentException) { }
@@ -64,7 +67,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.Assign);
+                Node n = new Node(Nodes.Assign, _tokenDefault);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
             }
             catch (ArgumentException) { }
@@ -75,7 +78,7 @@ namespace SyntaxAnalysis.Tests
         {
             try
             {
-                Node n = new Node(Nodes.DeclVar);
+                Node n = new Node(Nodes.DeclVar, _tokenDefault);
                 Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
             }
             catch (ArgumentException) { }

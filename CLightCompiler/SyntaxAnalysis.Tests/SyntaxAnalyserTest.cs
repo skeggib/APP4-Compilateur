@@ -167,7 +167,7 @@ int main() {
                             new Node(Nodes.Const, tokens[26])
                         ))
                     ),
-                    new Node(Nodes.Break)
+                    new Node(Nodes.Break, null)
                 ))
             )));
 
@@ -212,7 +212,7 @@ int main() {
                                             )
                                         )
                                     ),
-                                    new Node(Nodes.Break)
+                                    new Node(Nodes.Break,null)
                                 )
                             )
                         )

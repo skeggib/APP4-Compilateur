@@ -22,21 +22,13 @@ namespace SyntaxAnalysis
 
         public int VarCount;
 
-        public Node(Nodes category, Token token = null, params Node[] childs)
+        public Node(Nodes category, Token token, params Node[] childs)
         {
-            if ((category == Nodes.Const ||
-                category == Nodes.Assign ||
-                category == Nodes.DeclVar ||
-                category == Nodes.Call ||
-                category == Nodes.RefVar) &&
-                token == null)
-                throw new ArgumentException("The value cannot be null if the node is a const or a ref", "token");
-
             _id = _globalId;
             _globalId++;
 
             Category = category;
-            Token = token;
+            Token = token ?? throw new ArgumentException("The value of token cannot be null", "token");
 
             if (childs != null)
                 Childs = new List<Node>(childs);
