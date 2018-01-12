@@ -78,6 +78,18 @@
     <Content Include="Tests\Perso\pass\006.c">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tests\Perso\pass\007.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\Perso\pass\008.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\Perso\pass\009.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tests\Perso\pass\010.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tests\Prof\fail\fail.001.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -241,6 +253,18 @@
     <None Include="Tests\Perso\pass\006.out">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Tests\Perso\pass\007.out">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tests\Perso\pass\008.out">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tests\Perso\pass\009.out">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Tests\Perso\pass\010.out">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Tests\Prof\pass\pass.001.out">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -357,6 +381,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CLightCompiler\CLightCompiler.csproj">
+      <Project>{4b6f11d1-1d75-4b51-843c-aaeb8acae250}</Project>
+      <Name>CLightCompiler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CodeGeneration\CodeGeneration.csproj">
       <Project>{EDCF5CAB-F87B-4347-9413-0030B9748E66}</Project>
       <Name>CodeGeneration</Name>

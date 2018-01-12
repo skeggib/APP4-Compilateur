@@ -80,6 +80,30 @@ namespace SemanticAnalysis
                 }
             }
 
+            else if (tree.Category == Nodes.Indir)
+            {
+                tree.Slot = _table.GetSymbol(tree.Token).Slot;
+            }
+
+            else if (tree.Category == Nodes.IndirSet)
+            {
+                tree.Slot = _table.GetSymbol(tree.Token).Slot;
+                AnalyseSymbols(tree.Childs[0]);
+            }
+
+            else if (tree.Category == Nodes.Index)
+            {
+                tree.Slot = _table.GetSymbol(tree.Token).Slot;
+                AnalyseSymbols(tree.Childs[0]);
+            }
+
+            else if (tree.Category == Nodes.IndexSet)
+            {
+                tree.Slot = _table.GetSymbol(tree.Token).Slot;
+                AnalyseSymbols(tree.Childs[0]);
+                AnalyseSymbols(tree.Childs[1]);
+            }
+
             else
             {
                 foreach (var child in tree.Childs)

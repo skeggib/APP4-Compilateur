@@ -22,7 +22,7 @@ namespace CodeGeneration
             string code = string.Empty;
             _programSize = 0;
             code += _generate(tree);
-            code = String.Format(code, _programSize);
+            code = String.Format(code, _programSize + 1);
             return code;
         }
 
@@ -247,12 +247,15 @@ namespace CodeGeneration
 
                 case Nodes.Program:
                     code += ".start\n";
+                    code += "prep init\n";
+                    code += "call 0\n";
+                    code += "drop\n";
                     code += "prep main\n";
                     code += "call 0\n";
                     code += "halt\n";
                     foreach (var child in tree.Childs)
                         code += _generate(child);
-                    _programSize += 5;
+                    _programSize += 9;
                     break;
 
                 case Nodes.Indir:
