@@ -93,9 +93,6 @@ namespace SyntaxAnalysis
             if (other.Category != Category)
                 return false;
 
-            if (!ReferenceEquals(other.Token, Token))
-                return false;
-
             if (other.Childs != null && Childs != null)
             {
                 if (other.Childs.Count != Childs.Count)

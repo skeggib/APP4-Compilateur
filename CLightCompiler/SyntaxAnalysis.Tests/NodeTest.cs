@@ -20,68 +20,13 @@ namespace SyntaxAnalysis.Tests
         [TestMethod]
         public void NodeConstructorChilds()
         {
-            Node n = new Node(Nodes.Addition, null,
+            Node n = new Node(Nodes.Addition, _tokenDefault,
                 new Node(Nodes.Addition, _tokenDefault),
                 new Node(Nodes.Substraction, _tokenDefault));
 
             Assert.AreEqual(2, n.Childs.Count);
             Assert.AreEqual(Nodes.Addition, n.Childs[0].Category);
             Assert.AreEqual(Nodes.Substraction, n.Childs[1].Category);
-        }
-
-        [TestMethod]
-        public void NodeConstructorConstCategory()
-        {
-            try
-            {
-                Node n = new Node(Nodes.Const, _tokenDefault);
-                Assert.Fail("On ne devrait pas pouvoir creer de noeud const avec une valeur nulle");
-            }
-            catch (ArgumentException) { }
-        }
-
-        [TestMethod]
-        public void NodeConstructorRefVarCategory()
-        {
-            try
-            {
-                Node n = new Node(Nodes.RefVar, _tokenDefault);
-                Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
-            }
-            catch (ArgumentException) { }
-        }
-
-        [TestMethod]
-        public void NodeConstructorRefFuncCategory()
-        {
-            try
-            {
-                Node n = new Node(Nodes.Call, _tokenDefault);
-                Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
-            }
-            catch (ArgumentException) { }
-        }
-
-        [TestMethod]
-        public void NodeConstructorAssignCategory()
-        {
-            try
-            {
-                Node n = new Node(Nodes.Assign, _tokenDefault);
-                Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
-            }
-            catch (ArgumentException) { }
-        }
-
-        [TestMethod]
-        public void NodeConstructorDeclarationCategory()
-        {
-            try
-            {
-                Node n = new Node(Nodes.DeclVar, _tokenDefault);
-                Assert.Fail("On ne devrait pas pouvoir creer de noeud reference avec une valeur nulle");
-            }
-            catch (ArgumentException) { }
         }
     }
 }
