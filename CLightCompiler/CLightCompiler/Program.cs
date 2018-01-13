@@ -15,7 +15,7 @@ namespace CLightCompiler
                 Console.WriteLine("Usage: CLightCompiler.exe <input_file> <output_file>");
                 return;
             }
-
+            
             var inputPath = args[0];
             var outputPath = args[1];
 

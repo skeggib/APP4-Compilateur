@@ -18,13 +18,12 @@ namespace SyntaxAnalysis
             _index = 0;
 
             return Program();
-            //return Statement();
         }
 
         // Z -> D*
         private Node Program()
         {
-            var z = new Node(Nodes.Program);
+            var z = new Node(Nodes.Program, _tokens[0]);
 
             Node d;
             do
@@ -115,8 +114,9 @@ namespace SyntaxAnalysis
 
             if (_tokens[_index].Category == Tokens.OpeningBrace)
             {
+                var tokenOpeningBrace = _tokens[_index];
                 _index++;
-                Node block = new Node(Nodes.Block, null);
+                Node block = new Node(Nodes.Block, tokenOpeningBrace);
 
                 Node s;
                 do {
@@ -141,14 +141,17 @@ namespace SyntaxAnalysis
             {
                 if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
+
+                var tokenSemicolon = _tokens[_index];
                 _index++;
 
-                Node d = new Node(Nodes.Drop, null, e);
+                Node d = new Node(Nodes.Drop, tokenSemicolon, e);
                 return d;
             }
 
             else if (_tokens[_index].Category == Tokens.Out)
             {
+                var tokenOut = _tokens[_index];
                 _index++;
                 if ((e = Expression()) != null)
                 {
@@ -156,7 +159,7 @@ namespace SyntaxAnalysis
                         throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
                     _index++;
 
-                    Node o = new Node(Nodes.Out, null, e);
+                    Node o = new Node(Nodes.Out, tokenOut, e);
                     return o;
                 }
 
@@ -164,6 +167,7 @@ namespace SyntaxAnalysis
 
             else if (_tokens[_index].Category == Tokens.If)
             {
+                var tokenIf = _tokens[_index];
                 _index++;
                 Node p;
                 if (_index >= _tokens.Count ||
@@ -175,7 +179,7 @@ namespace SyntaxAnalysis
                 if (_index >= _tokens.Count || sIf == null)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected if body");
 
-                Node cond = new Node(Nodes.Condition, null, p, sIf);
+                Node cond = new Node(Nodes.Condition, tokenIf, p, sIf);
 
                 if (_index < _tokens.Count &&
                     _tokens[_index].Category == Tokens.Else)
@@ -207,6 +211,7 @@ namespace SyntaxAnalysis
 
             else if (_tokens[_index].Category == Tokens.While)
             {
+                var tokenWhile = _tokens[_index];
                 _index++; //On mange "while"
                 Node p;
                 if (_index >= _tokens.Count ||
@@ -218,9 +223,9 @@ namespace SyntaxAnalysis
                 if (_index >= _tokens.Count || s == null)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected while body");
 
-                Node break_node = new Node(Nodes.Break, null);
-                Node cond = new Node(Nodes.Condition, null, p, s, break_node);
-                Node while_loop = new Node(Nodes.Loop, null, cond);
+                Node break_node = new Node(Nodes.Break, tokenWhile);
+                Node cond = new Node(Nodes.Condition, tokenWhile, p, s, break_node);
+                Node while_loop = new Node(Nodes.Loop, tokenWhile, cond);
                 return while_loop;
             }
 
@@ -233,6 +238,7 @@ namespace SyntaxAnalysis
 
                 if (_tokens[_index].Category == Tokens.While)
                 {
+                    var currentToken = _tokens[_index];
                     _index++;
                     Node p;
                     if (_index >= _tokens.Count ||
@@ -244,17 +250,18 @@ namespace SyntaxAnalysis
                     //    throw new SyntaxException(_tokens[_index].Offset, "Expected ';'");
                     //_index++;
 
-                    Node break_node = new Node(Nodes.Break);
-                    Node continue_node = new Node(Nodes.Continue);
-                    Node cond = new Node(Nodes.Condition, null, p, continue_node, break_node);
-                    Node block_node = new Node(Nodes.Block, null, s, cond);
-                    Node loop_node = new Node(Nodes.Loop, null, block_node);
+                    Node break_node = new Node(Nodes.Break, currentToken);
+                    Node continue_node = new Node(Nodes.Continue, currentToken);
+                    Node cond = new Node(Nodes.Condition, currentToken, p, continue_node, break_node);
+                    Node block_node = new Node(Nodes.Block, currentToken, s, cond);
+                    Node loop_node = new Node(Nodes.Loop, currentToken, block_node);
                     return loop_node;
                 }
             }
 
             else if (_tokens[_index].Category == Tokens.For)
             {
+                var currentToken = _tokens[_index];
                 _index++;
                 if(_index>=_tokens.Count || _tokens[_index].Category != Tokens.OpeningParenthesis)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected opening parenthesis");
@@ -288,10 +295,10 @@ namespace SyntaxAnalysis
                 if (_index >= _tokens.Count || (s = Statement()) == null)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected for body");
 
-                Node body_node = new Node(Nodes.Block, null, s, post_op);
-                Node cond_node = new Node(Nodes.Condition, null, expre, body_node, new Node(Nodes.Break));
-                Node loop_node = new Node(Nodes.Loop, null, cond_node);
-                Node for_node = new Node(Nodes.Block, null, init, loop_node);
+                Node body_node = new Node(Nodes.Block, currentToken, s, post_op);
+                Node cond_node = new Node(Nodes.Condition, currentToken, expre, body_node, new Node(Nodes.Break, currentToken));
+                Node loop_node = new Node(Nodes.Loop, currentToken, cond_node);
+                Node for_node = new Node(Nodes.Block, currentToken, init, loop_node);
                 return for_node;
             }
 
@@ -303,8 +310,7 @@ namespace SyntaxAnalysis
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
                 _index++;
                 return new Node(Nodes.Break, token);
-            }
-                
+            }       
 
             else if (_tokens[_index].Category == Tokens.Continue)
             {
@@ -316,9 +322,9 @@ namespace SyntaxAnalysis
                 return new Node(Nodes.Continue, token);
             }
                 
-
             else if (_tokens[_index].Category == Tokens.Return)
             {
+                var currentToken = _tokens[_index];
                 _index++; // On mange 'return'
                 var expression = Expression();
                 if (expression == null)
@@ -326,7 +332,7 @@ namespace SyntaxAnalysis
                 if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Semicolon)
                 {
                     _index++; // On mange ';'
-                    return new Node(Nodes.Return, null, expression);
+                    return new Node(Nodes.Return, currentToken, expression);
                 }
                 
                 throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
@@ -497,20 +503,22 @@ namespace SyntaxAnalysis
 
                 case Tokens.Minus: // TODO Revoir si deux '-' a la suite sont valides
                     {
+                        var tokenMinus = _tokens[_index];
                         _index++;
                         Node p = Primary();
                         if (p == null)
                             throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '-'");
-                        return new Node(Nodes.Negative, null, p);
+                        return new Node(Nodes.Negative, tokenMinus, p);
                     }
 
                 case Tokens.Not:
                     {
+                        var tokenNot = _tokens[_index];
                         _index++;
                         Node p = Primary();
                         if (p == null)
                             throw new SyntaxException(_tokens[_index - 1].Offset, "unexpected token after '!'");
-                        return new Node(Nodes.Not, null, p);
+                        return new Node(Nodes.Not, tokenNot, p);
                     }
 
                 case Tokens.OpeningParenthesis:
@@ -542,11 +550,11 @@ namespace SyntaxAnalysis
 
             Node op = null;
             if (_tokens[_index].Category == Tokens.Asterisk)
-                op = new Node(Nodes.Multiplication, null, p);
+                op = new Node(Nodes.Multiplication, _tokens[_index], p);
             else if (_tokens[_index].Category == Tokens.Divide)
-                op = new Node(Nodes.Division, null, p);
+                op = new Node(Nodes.Division, _tokens[_index], p);
             else if (_tokens[_index].Category == Tokens.Modulo)
-                op = new Node(Nodes.Modulo, null, p);
+                op = new Node(Nodes.Modulo, _tokens[_index], p);
             else
                 return p;
 
@@ -577,9 +585,9 @@ namespace SyntaxAnalysis
 
             Node op = null;
             if (_tokens[_index].Category == Tokens.Plus)
-                op = new Node(Nodes.Addition, null, f);
+                op = new Node(Nodes.Addition, _tokens[_index], f);
             else if (_tokens[_index].Category == Tokens.Minus)
-                op = new Node(Nodes.Substraction, null, f);
+                op = new Node(Nodes.Substraction, _tokens[_index], f);
             else
                 return f;
 
@@ -612,27 +620,27 @@ namespace SyntaxAnalysis
             switch (_tokens[_index].Category)
             {
                 case Tokens.Equals:
-                    op = new Node(Nodes.AreEqual, null, t);
+                    op = new Node(Nodes.AreEqual, _tokens[_index], t);
                     break;
 
                 case Tokens.NotEquals:
-                    op = new Node(Nodes.AreNotEqual, null, t);
+                    op = new Node(Nodes.AreNotEqual, _tokens[_index], t);
                     break;
 
                 case Tokens.LowerThan:
-                    op = new Node(Nodes.LowerThan, null, t);
+                    op = new Node(Nodes.LowerThan, _tokens[_index], t);
                     break;
 
                 case Tokens.GreaterThan:
-                    op = new Node(Nodes.GreaterThan, null, t);
+                    op = new Node(Nodes.GreaterThan, _tokens[_index], t);
                     break;
 
                 case Tokens.LowerOrEqual:
-                    op = new Node(Nodes.LowerOrEqual, null, t);
+                    op = new Node(Nodes.LowerOrEqual, _tokens[_index], t);
                     break;
 
                 case Tokens.GreaterOrEqual:
-                    op = new Node(Nodes.GreaterOrEqual, null, t);
+                    op = new Node(Nodes.GreaterOrEqual, _tokens[_index], t);
                     break;
 
                 default:
@@ -666,7 +674,7 @@ namespace SyntaxAnalysis
 
             Node op = null;
             if (_tokens[_index].Category == Tokens.And)
-                op = new Node(Nodes.And, null, c);
+                op = new Node(Nodes.And, _tokens[_index], c);
             else
                 return c;
 
@@ -697,7 +705,7 @@ namespace SyntaxAnalysis
 
             Node op = null;
             if (_tokens[_index].Category == Tokens.Or)
-                op = new Node(Nodes.Or, null, l);
+                op = new Node(Nodes.Or, _tokens[_index], l);
             else
                 return l;
 

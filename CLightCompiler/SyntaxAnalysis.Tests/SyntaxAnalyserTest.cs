@@ -7,6 +7,8 @@ namespace SyntaxAnalysis.Tests
     [TestClass]
     public class SyntaxAnalyserTest
     {
+        private Token _tokenDefault = new Token(Tokens.Void, 0);
+
         [TestMethod]
         public void SyntaxAnalyserArithmeticsAndLogic()
         {
@@ -20,24 +22,24 @@ int main() {
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
             var expectedTree =
-            new Node(Nodes.Program, null,
+            new Node(Nodes.Program, _tokenDefault,
                 new Node(Nodes.DeclFunc, tokens[1],
-                    new Node(Nodes.Block, null,
+                    new Node(Nodes.Block, _tokenDefault,
                         new Node(Nodes.Assign, tokens[5],
-                            new Node(Nodes.Or, null,
-                                new Node(Nodes.And, null,
-                                    new Node(Nodes.Not, null,
+                            new Node(Nodes.Or, _tokenDefault,
+                                new Node(Nodes.And, _tokenDefault,
+                                    new Node(Nodes.Not, _tokenDefault,
                                         new Node(Nodes.Const, tokens[8])
                                     ),
-                                    new Node(Nodes.LowerThan, null,
+                                    new Node(Nodes.LowerThan, _tokenDefault,
                                         new Node(Nodes.Const, tokens[10]),
                                         new Node(Nodes.Const, tokens[12])
                                     )
                                 ),
-                                new Node(Nodes.AreEqual, null,
+                                new Node(Nodes.AreEqual, _tokenDefault,
                                     new Node(Nodes.Const, tokens[14]),
-                                    new Node(Nodes.AreNotEqual, null,
-                                        new Node(Nodes.Addition, null,
+                                    new Node(Nodes.AreNotEqual, _tokenDefault,
+                                        new Node(Nodes.Addition, _tokenDefault,
                                             new Node(Nodes.Const, tokens[17]),
                                             new Node(Nodes.Const, tokens[19])
                                         ),
@@ -67,9 +69,9 @@ int main() {
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
             var expectedTree =
-                new Node(Nodes.Program, null,
+                new Node(Nodes.Program, _tokenDefault,
                     new Node(Nodes.DeclFunc, tokens[1],
-                        new Node(Nodes.Block, null,
+                        new Node(Nodes.Block, _tokenDefault,
                             new Node(Nodes.DeclVar, tokens[6]),
                             new Node(Nodes.Assign, tokens[8],
                                 new Node(Nodes.Const, tokens[10])
@@ -101,28 +103,28 @@ int main() {
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
             var expectedTree =
-                new Node(Nodes.Program, null,
+                new Node(Nodes.Program, _tokenDefault,
                     new Node(Nodes.DeclFunc, tokens[1],
-                        new Node(Nodes.Block, null,
+                        new Node(Nodes.Block, _tokenDefault,
                             new Node(Nodes.DeclVar, tokens[6]),
                             new Node(Nodes.Assign, tokens[8],
                                 new Node(Nodes.Const, tokens[10])
                             ),
-                            new Node(Nodes.Condition, null,
-                                new Node(Nodes.AreEqual, null,
+                            new Node(Nodes.Condition, _tokenDefault,
+                                new Node(Nodes.AreEqual, _tokenDefault,
                                     new Node(Nodes.RefVar, tokens[14]),
                                     new Node(Nodes.Const, tokens[16])
                                 ),
                                 new Node(Nodes.Assign, tokens[18],
                                     new Node(Nodes.Const, tokens[20])
                                 ),
-                                new Node(Nodes.Block, null,
+                                new Node(Nodes.Block, _tokenDefault,
                                     new Node(Nodes.DeclVar, tokens[25]),
                                     new Node(Nodes.Assign, tokens[27],
                                         new Node(Nodes.Const, tokens[29])
                                     ),
                                     new Node(Nodes.Assign, tokens[31],
-                                        new Node(Nodes.Substraction, null,
+                                        new Node(Nodes.Substraction, _tokenDefault,
                                             new Node(Nodes.RefVar, tokens[33]),
                                             new Node(Nodes.RefVar, tokens[35])
                                         )
@@ -153,21 +155,21 @@ int main() {
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
             var expectedTree =
-                new Node(Nodes.Program, null,
+                new Node(Nodes.Program, _tokenDefault,
                     new Node(Nodes.DeclFunc, tokens[1],
-            new Node(Nodes.Block, null,
+            new Node(Nodes.Block, _tokenDefault,
                 new Node(Nodes.DeclVar, tokens[6]),
                 new Node(Nodes.Assign, tokens[8], new Node(Nodes.Const, tokens[10])),
-                new Node(Nodes.Loop, null, new Node(Nodes.Condition, null,
-                    new Node(Nodes.LowerThan, null, new Node(Nodes.RefVar, tokens[14]), new Node(Nodes.Const, tokens[16])),
-                    new Node(Nodes.Block, null,
-                        new Node(Nodes.Out, null, new Node(Nodes.RefVar, tokens[20])),
-                        new Node(Nodes.Assign, tokens[22], new Node(Nodes.Addition, null,
+                new Node(Nodes.Loop, _tokenDefault, new Node(Nodes.Condition, _tokenDefault,
+                    new Node(Nodes.LowerThan, _tokenDefault, new Node(Nodes.RefVar, tokens[14]), new Node(Nodes.Const, tokens[16])),
+                    new Node(Nodes.Block, _tokenDefault,
+                        new Node(Nodes.Out, _tokenDefault, new Node(Nodes.RefVar, tokens[20])),
+                        new Node(Nodes.Assign, tokens[22], new Node(Nodes.Addition, _tokenDefault,
                             new Node(Nodes.RefVar, tokens[24]),
                             new Node(Nodes.Const, tokens[26])
                         ))
                     ),
-                    new Node(Nodes.Break)
+                    new Node(Nodes.Break, _tokenDefault)
                 ))
             )));
 
@@ -189,30 +191,30 @@ int main() {
             var tokens = new LexicalAnalyser().Convert(clCode);
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            var expectedTree = new Node(Nodes.Program, null,
+            var expectedTree = new Node(Nodes.Program, _tokenDefault,
                 new Node(Nodes.DeclFunc, tokens[1],
-                    new Node(Nodes.Block, null,
+                    new Node(Nodes.Block, _tokenDefault,
                         new Node(Nodes.DeclVar, tokens[6]),
-                        new Node(Nodes.Block, null,
+                        new Node(Nodes.Block, _tokenDefault,
                             new Node(Nodes.Assign, tokens[10], new Node(Nodes.Const, tokens[12])),
-                            new Node(Nodes.Loop, null,
-                                new Node(Nodes.Condition, null,
-                                    new Node(Nodes.LowerThan, null,
+                            new Node(Nodes.Loop, _tokenDefault,
+                                new Node(Nodes.Condition, _tokenDefault,
+                                    new Node(Nodes.LowerThan, _tokenDefault,
                                         new Node(Nodes.RefVar, tokens[14]),
                                         new Node(Nodes.Const, tokens[16])
                                     ),
-                                    new Node(Nodes.Block, null,
-                                        new Node(Nodes.Block, null,
-                                            new Node(Nodes.Out, null, new Node(Nodes.RefVar, tokens[26]))
+                                    new Node(Nodes.Block, _tokenDefault,
+                                        new Node(Nodes.Block, _tokenDefault,
+                                            new Node(Nodes.Out, _tokenDefault, new Node(Nodes.RefVar, tokens[26]))
                                         ),
                                         new Node(Nodes.Assign, tokens[18],
-                                            new Node(Nodes.Addition, null,
+                                            new Node(Nodes.Addition, _tokenDefault,
                                                 new Node(Nodes.RefVar, tokens[20]),
                                                 new Node(Nodes.Const, tokens[22])
                                             )
                                         )
                                     ),
-                                    new Node(Nodes.Break)
+                                    new Node(Nodes.Break, _tokenDefault)
                                 )
                             )
                         )
@@ -235,10 +237,10 @@ int main() {
             var tokens = new LexicalAnalyser().Convert(clCode);
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            var expectedTree = new Node(Nodes.Program, null,
+            var expectedTree = new Node(Nodes.Program, _tokenDefault,
                 new Node(Nodes.DeclFunc, tokens[1],
-                    new Node(Nodes.Block, null,
-                        new Node(Nodes.Drop, null,
+                    new Node(Nodes.Block, _tokenDefault,
+                        new Node(Nodes.Drop, _tokenDefault,
                             new Node(Nodes.Call, tokens[5],
                                 new Node(Nodes.Const, tokens[7]),
                                 new Node(Nodes.Const, tokens[9])
@@ -262,11 +264,11 @@ int main() {
             var tokens = new LexicalAnalyser().Convert(clCode);
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            var expectedTree = new Node(Nodes.Program, null,
+            var expectedTree = new Node(Nodes.Program, _tokenDefault,
                 new Node(Nodes.DeclFunc, tokens[1],
-                    new Node(Nodes.Block, null,
-                        new Node(Nodes.Out, null,
-                            new Node(Nodes.Addition, null,
+                    new Node(Nodes.Block, _tokenDefault,
+                        new Node(Nodes.Out, _tokenDefault,
+                            new Node(Nodes.Addition, _tokenDefault,
                                 new Node(Nodes.Const, tokens[6]),
                                 new Node(Nodes.Const, tokens[8])
                             )
@@ -289,11 +291,11 @@ int main(int a) {
             var tokens = new LexicalAnalyser().Convert(clCode);
             var actualTree = new SyntaxAnalyser().Convert(tokens);
 
-            var expectedTree = new Node(Nodes.Program, null,
+            var expectedTree = new Node(Nodes.Program, _tokenDefault,
                 new Node(Nodes.DeclFunc, tokens[1],
-                    new Node(Nodes.Block, null,
-                        new Node(Nodes.Out, null,
-                            new Node(Nodes.Addition, null,
+                    new Node(Nodes.Block, _tokenDefault,
+                        new Node(Nodes.Out, _tokenDefault,
+                            new Node(Nodes.Addition, _tokenDefault,
                                 new Node(Nodes.RefVar, tokens[8]),
                                 new Node(Nodes.Const, tokens[10])
                             )

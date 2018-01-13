@@ -14,7 +14,7 @@ namespace CLightCompiler.Tests
     public class CLightCompilerTest
     {
         [TestMethod]
-        public void FonctionSomme()
+        public void DisplayZero()
         {
             string code = "int main(){out 0;}";
             string result = TestHelper.Run(TestHelper.Compile(code));
