@@ -25,10 +25,6 @@ namespace CLightCompiler
             string outputPath = args[1];
             string architecture = args.Length > 2 ? args[2] : "msm";
 
-            LexicalAnalyser lexical = new LexicalAnalyser();
-            SyntaxAnalyser syntax = new SyntaxAnalyser();
-            SemanticAnalyser semantics = new SemanticAnalyser();
-
             ICodeGenerator generator = null;
             switch (architecture)
             {
