@@ -44,17 +44,15 @@ namespace CLightCompiler
             try
             {
                 string cLightCode = null;
+
                 using (StreamReader reader = new StreamReader(inputPath))
                 {
-                    cLightCode = reader.ReadToEnd();
+                    cLightCode += reader.ReadToEnd();
                 }
 
                 try
                 {
-                    var tokens = lexical.Convert(cLightCode);
-                    var tree = syntax.Convert(tokens);
-                    semantics.Analyse(tree);
-                    var asmCode = generator.Generate(tree);
+                    var asmCode = CLightCompiler.Compile(cLightCode);
 
                     try
                     {

@@ -1,8 +1,4 @@
-﻿using CodeGeneration;
-using LexicalAnalysis;
-using SemanticAnalysis;
-using SyntaxAnalysis;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -33,15 +29,7 @@ namespace CLightCompiler.Tests
 
         public static string Compile(string code)
         {
-            var lexical = new LexicalAnalyser();
-            var syntax = new SyntaxAnalyser();
-            var semantic = new SemanticAnalyser();
-            var generation = new MSMCodeGenerator();
-
-            var tokens = lexical.Convert(code);
-            var tree = syntax.Convert(tokens);
-            semantic.Analyse(tree);
-            return generation.Generate(tree);
+            return CLightCompiler.Compile(code);
         }
     }
 }

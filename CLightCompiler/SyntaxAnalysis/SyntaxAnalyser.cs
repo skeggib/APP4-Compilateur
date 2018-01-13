@@ -375,7 +375,7 @@ namespace SyntaxAnalysis
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected identifier");
             }
 
-            else if (_tokens[_index].Category == Tokens.Ident) // TODO Tester si le equal est necessaire ou non
+            else if (_tokens[_index].Category == Tokens.Ident)
             {
                 Token token = _tokens[_index];
                 _index++; // On mange l'ident
