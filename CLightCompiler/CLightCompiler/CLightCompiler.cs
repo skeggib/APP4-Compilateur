@@ -2,12 +2,8 @@
 using LexicalAnalysis;
 using SemanticAnalysis;
 using SyntaxAnalysis;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace CLightCompiler
 {
@@ -20,11 +16,17 @@ namespace CLightCompiler
             var semantics = new SemanticAnalyser();
             var generator = new MSMCodeGenerator();
 
-            var allCode = File.ReadAllText("std.c") + code;
+            var allCode = GetStdCode() + code;
 
-            var tree = syntax.Convert(lexical.Convert(allCode));
+            var tokens = lexical.Convert(allCode);
+            var tree = syntax.Convert(tokens);
             semantics.Analyse(tree);
             return generator.Generate(tree);
+        }
+
+        public static string GetStdCode()
+        {
+            return File.ReadAllText("std.c") + "\n";
         }
     }
 }

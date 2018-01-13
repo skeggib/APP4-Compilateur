@@ -1,9 +1,7 @@
-﻿using CodeGeneration;
-using LexicalAnalysis;
+﻿using LexicalAnalysis;
 using SemanticAnalysis;
 using SyntaxAnalysis;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace CLightCompiler
@@ -14,38 +12,18 @@ namespace CLightCompiler
         {
             if (args.Length < 2)
             {
-                Console.WriteLine("Usage: CLightCompiler.exe <input_file> <output_file> [architecture]");
-                Console.WriteLine("List of availables architecture:");
-                Console.WriteLine("- msm (default)");
-                Exit();
+                Console.WriteLine("Usage: CLightCompiler.exe <input_file> <output_file>");
                 return;
             }
 
-            string inputPath = args[0];
-            string outputPath = args[1];
-            string architecture = args.Length > 2 ? args[2] : "msm";
-
-            LexicalAnalyser lexical = new LexicalAnalyser();
-            SyntaxAnalyser syntax = new SyntaxAnalyser();
-            SemanticAnalyser semantics = new SemanticAnalyser();
-
-            ICodeGenerator generator = null;
-            switch (architecture)
-            {
-                case "msm":
-                    generator = new MSMCodeGenerator();
-                    break;
-                default:
-                    Console.WriteLine("Unknown architecture: " + architecture);
-                    Exit();
-                    return;
-            }
+            var inputPath = args[0];
+            var outputPath = args[1];
 
             try
             {
                 string cLightCode = null;
 
-                using (StreamReader reader = new StreamReader(inputPath))
+                using (var reader = new StreamReader(inputPath))
                 {
                     cLightCode += reader.ReadToEnd();
                 }
@@ -56,7 +34,7 @@ namespace CLightCompiler
 
                     try
                     {
-                        using (StreamWriter writer = new StreamWriter(outputPath, false))
+                        using (var writer = new StreamWriter(outputPath, false))
                         {
                             writer.Write(asmCode);
                         }
@@ -64,43 +42,29 @@ namespace CLightCompiler
                     catch (Exception)
                     {
                         Console.WriteLine("Cannot write file " + outputPath);
-                        Exit();
-                        return;
                     }
                 }
                 catch (LexicalException e)
                 {
-                    DisplayError(cLightCode, e.Message, e.Offset);
-                    Exit();
+                    DisplayError(CLightCompiler.GetStdCode() + cLightCode, e.Message, e.Offset);
                 }
                 catch (SyntaxException e)
                 {
-                    DisplayError(cLightCode, e.Message, e.Offset);
-                    Exit();
+                    DisplayError(CLightCompiler.GetStdCode() + cLightCode, e.Message, e.Offset);
                 }
                 catch (SemanticException e)
                 {
-                    DisplayError(cLightCode, e.Message, e.Offset);
-                    Exit();
+                    DisplayError(CLightCompiler.GetStdCode() + cLightCode, e.Message, e.Offset);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Cannot compile: "+ e.Message + "\n" + e.StackTrace);
-                    Exit();
-                    return;
                 }
             }
             catch (Exception)
             {
                 Console.WriteLine("Cannot read file " + inputPath);
-                Exit();
-                return;
             }
-        }
-
-        private static void Exit()
-        {
-            Console.ReadKey();
         }
 
         private static void DisplayError(string code, string error, int offset)
