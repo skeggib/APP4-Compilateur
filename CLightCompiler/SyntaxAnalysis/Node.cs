@@ -29,7 +29,7 @@ namespace SyntaxAnalysis
 
             Category = category;
             
-            if (Token == null)
+            if (token == null)
                 throw new ArgumentException("The value of token cannot be null", "token");
             Token = token;
 
