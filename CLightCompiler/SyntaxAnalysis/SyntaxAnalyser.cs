@@ -12,6 +12,13 @@ namespace SyntaxAnalysis
         private IList<Token> _tokens;
         private int _index;
 
+        private Node _forPostOperation; // Sert a executer le post-action dans une boucle for avant un continue
+
+        /// <summary>
+        /// Convertit une liste de tokens en arbre
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <returns></returns>
         public Node Convert(IList<Token> tokens)
         {
             _tokens = tokens;
@@ -23,17 +30,17 @@ namespace SyntaxAnalysis
         // Z -> D*
         private Node Program()
         {
-            var z = new Node(Nodes.Program, _tokens[0]);
+            var program = new Node(Nodes.Program, _tokens[0]);
 
-            Node d;
+            Node declarationFunc;
             do
             {
-                d = DeclarationFunc();
-                if (d != null)
-                    z.Childs.Add(d);
-            } while (d != null);
+                declarationFunc = DeclarationFunc();
+                if (declarationFunc != null)
+                    program.Childs.Add(declarationFunc);
+            } while (declarationFunc != null);
 
-            return z;
+            return program;
         }
 
         // D -> 'int' ident '(' ('int' ident)* ')' S
@@ -46,7 +53,7 @@ namespace SyntaxAnalysis
                 if (_index == _tokens.Count || _tokens[_index].Category != Tokens.Ident)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected identifier");
 
-                var d = new Node(Nodes.DeclFunc, _tokens[_index]);
+                var declarationFunc = new Node(Nodes.DeclFunc, _tokens[_index]);
 
                 _index++; // On mange ident
 
@@ -60,7 +67,7 @@ namespace SyntaxAnalysis
                     _index++; // On mange 'int'
                     if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Ident)
                     {
-                        d.Tokens.Add(_tokens[_index]);
+                        declarationFunc.Tokens.Add(_tokens[_index]);
                         _index++; // On mange ident
                     }
                     else
@@ -75,7 +82,7 @@ namespace SyntaxAnalysis
                             _index++; // On mange 'int'
                             if (_index < _tokens.Count && _tokens[_index].Category == Tokens.Ident)
                             {
-                                d.Tokens.Add(_tokens[_index]);
+                                declarationFunc.Tokens.Add(_tokens[_index]);
                                 _index++; // On mange ident
                             }
                             else
@@ -92,13 +99,13 @@ namespace SyntaxAnalysis
                 else
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ')'");
 
-                var s = Statement();
-                if (s == null)
+                var statement = Statement();
+                if (statement == null)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected statement");
 
-                d.Childs.Add(s);
+                declarationFunc.Childs.Add(statement);
 
-                return d;
+                return declarationFunc;
             }
 
             return null;
@@ -291,9 +298,12 @@ namespace SyntaxAnalysis
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ')'");
 
                 _index++;
+
+                _forPostOperation = post_op;
                 Node s;
                 if (_index >= _tokens.Count || (s = Statement()) == null)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected for body");
+                _forPostOperation = null;
 
                 Node body_node = new Node(Nodes.Block, currentToken, s, post_op);
                 Node cond_node = new Node(Nodes.Condition, currentToken, expre, body_node, new Node(Nodes.Break, currentToken));
@@ -319,7 +329,11 @@ namespace SyntaxAnalysis
                 if (_index >= _tokens.Count || _tokens[_index].Category != Tokens.Semicolon)
                     throw new SyntaxException(_tokens[_index - 1].Offset, "Expected ';'");
                 _index++;
-                return new Node(Nodes.Continue, token);
+                
+                var node = new Node(Nodes.Continue, token);
+                if (_forPostOperation != null)
+                    node.Childs.Add(_forPostOperation);
+                return node;
             }
                 
             else if (_tokens[_index].Category == Tokens.Return)

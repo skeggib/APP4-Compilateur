@@ -27,6 +27,9 @@ namespace SemanticAnalysis
 
         public SymbolsTable AnalyseSymbols(Node tree)
         {
+            if (tree == null)
+                return _table;
+
             if (tree.Category == Nodes.Block)
             {
                 _table.StartBlock();

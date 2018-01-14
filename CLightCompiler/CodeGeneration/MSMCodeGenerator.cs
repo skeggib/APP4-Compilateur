@@ -211,6 +211,8 @@ namespace CodeGeneration
                     break;
 
                 case Nodes.Continue:
+                    if (tree.Childs.Count > 0 && tree.Childs[0] != null)
+                        code += _generate(tree.Childs[0]);
                     code += "jump " + GetCurrentLoopBeginningLabel() + "\t;" + GetIndentString() + "continue\n";
                     _programSize += 2;
                     break;
