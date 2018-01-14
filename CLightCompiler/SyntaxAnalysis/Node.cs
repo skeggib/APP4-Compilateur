@@ -28,7 +28,10 @@ namespace SyntaxAnalysis
             _globalId++;
 
             Category = category;
-            Token = token ?? throw new ArgumentException("The value of token cannot be null", "token");
+            
+            if (Token == null)
+                throw new ArgumentException("The value of token cannot be null", "token");
+            Token = token;
 
             if (childs != null)
                 Childs = new List<Node>(childs);

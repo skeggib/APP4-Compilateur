@@ -16,7 +16,8 @@ Compilation :
 
 Utilisation :
 
-`mono CLightCompiler/CLightCompiler/bin/Debug/CLightCompiler.exe <fichier_source> <fichier_de_sortie>`
+`cd CLightCompiler/CLightCompiler/bin/Debug/`
+`mono CLightCompiler.exe <fichier_source> <fichier_de_sortie>`
 
 ## Windows
 

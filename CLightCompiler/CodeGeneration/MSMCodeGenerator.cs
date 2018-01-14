@@ -141,7 +141,7 @@ namespace CodeGeneration
 
                 case Nodes.Not:
                     code += _generate(tree.Childs[0]);
-                    code += $"not\n";
+                    code += "not\n";
                     _programSize += 1;
                     break;
 
