@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISyntaxAnalyser.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Nodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

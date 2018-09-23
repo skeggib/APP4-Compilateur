@@ -4,15 +4,15 @@ using System.Linq;
 namespace LexicalAnalysis
 {
     /// <summary>
-    /// Analyseur lexical d'un code CLight
+    /// Lexical analyser
     /// </summary>
-    public class LexicalAnalyser
+    public class LexicalAnalyser : ILexicalAnalyser
     {
         /// <summary>
-        /// Converti un code CLight en liste de tokens
+        /// Converts CLight code to a tokens list
         /// </summary>
-        /// <param name="code">Code CLight</param>
-        /// <returns>La liste de tokens</returns>
+        /// <param name="code">CLight code</param>
+        /// <returns>The tokens list</returns>
         /// <exception cref="LexicalException"></exception>
         public List<Token> Convert(string code)
         {
@@ -35,10 +35,9 @@ namespace LexicalAnalysis
                         word += code[++i];
                     }
 
-                    // Si le mot est un mot cle du langage, on ajout le token correspondant
+                    // Si le mot est un mot cle du langage, on ajout le token correspondant, si non on ajoute un ident
                     if (Token.KeyWordsAssociations.ContainsKey(word))
                         tokens.Add(new Token(Token.KeyWordsAssociations[word], offset));
-                    // Si le mot est une fonction ou une variable, on ajoute le token Ident
                     else
                         tokens.Add(new Token(Tokens.Ident, offset) { Ident = word });
                 }
@@ -111,7 +110,7 @@ namespace LexicalAnalysis
         }
 
         /// <summary>
-        /// Teste si un caractere est un caractere special valide, les caracteres speciaux valides sont definis dans Token.SpecialCharacters
+        /// Tests whenether a character is a valid special character (defined in Token.SpecialCharacters)
         /// </summary>
         private static bool IsValidSpecialCharacter(char c)
         {

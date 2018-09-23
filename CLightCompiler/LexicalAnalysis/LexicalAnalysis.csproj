@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILexicalAnalyser.cs" />
     <Compile Include="LexicalAnalyser.cs" />
     <Compile Include="LexicalException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

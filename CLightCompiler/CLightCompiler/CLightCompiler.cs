@@ -7,21 +7,33 @@ using System;
 
 namespace CLightCompiler
 {
-    public static class CLightCompiler
+    public class CLightCompiler
     {
-        public static string Compile(string code)
-        {
-            var lexical = new LexicalAnalyser();
-            var syntax = new SyntaxAnalyser();
-            var semantics = new SemanticAnalyser();
-            var generator = new MSMCodeGenerator();
+        private readonly ILexicalAnalyser _lexicalAnalyser;
+        private readonly ISyntaxAnalyser _syntaxAnalyser;
+        private readonly ISemanticAnalyser _semanticAnalyser;
+        private readonly ICodeGenerator _codeGenerator;
 
+        public CLightCompiler(
+            ILexicalAnalyser lexical, 
+            ISyntaxAnalyser syntax, 
+            ISemanticAnalyser semantic,
+            ICodeGenerator generator)
+        {
+            _lexicalAnalyser = lexical ?? throw new ArgumentNullException(nameof(lexical));
+            _syntaxAnalyser = syntax ?? throw new ArgumentNullException(nameof(syntax));
+            _semanticAnalyser = semantic ?? throw new ArgumentNullException(nameof(semantic));
+            _codeGenerator = generator ?? throw new ArgumentNullException(nameof(generator));
+        }
+
+        public string Compile(string code)
+        {
             var allCode = GetStdCode() + code;
 
-            var tokens = lexical.Convert(allCode);
-            var tree = syntax.Convert(tokens);
-            semantics.Analyse(tree);
-            return generator.Generate(tree);
+            var tokens = _lexicalAnalyser.Convert(allCode);
+            var tree = _syntaxAnalyser.Convert(tokens);
+            _semanticAnalyser.Analyse(tree);
+            return _codeGenerator.Generate(tree);
         }
 
         public static string GetStdCode()

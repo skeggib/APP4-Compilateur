@@ -3,6 +3,7 @@ using SemanticAnalysis;
 using SyntaxAnalysis;
 using System;
 using System.IO;
+using CodeGeneration;
 
 namespace CLightCompiler
 {
@@ -30,7 +31,13 @@ namespace CLightCompiler
 
                 try
                 {
-                    var asmCode = CLightCompiler.Compile(cLightCode);
+                    var compiler = new CLightCompiler(
+                        new LexicalAnalyser(), 
+                        new SyntaxAnalyser(), 
+                        new SemanticAnalyser(), 
+                        new MSMCodeGenerator());
+
+                    var asmCode = compiler.Compile(cLightCode);
 
                     try
                     {

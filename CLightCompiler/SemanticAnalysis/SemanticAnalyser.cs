@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SemanticAnalysis
 {
-    public class SemanticAnalyser
+    public class SemanticAnalyser : ISemanticAnalyser
     {
         public int Counter { get; private set; }
 
@@ -19,16 +19,16 @@ namespace SemanticAnalysis
         }
 
 
-        public SymbolsTable Analyse(Node tree)
+        public void Analyse(Node tree)
         {
             AnalyseLoop(tree);
-            return AnalyseSymbols(tree);
+            AnalyseSymbols(tree);
         }
 
-        public SymbolsTable AnalyseSymbols(Node tree)
+        public void AnalyseSymbols(Node tree)
         {
             if (tree == null)
-                return _table;
+                return;
 
             if (tree.Category == Nodes.Block)
             {
@@ -114,8 +114,6 @@ namespace SemanticAnalysis
                     AnalyseSymbols(child);
                 }
             }
-
-            return _table;
         }
 
 

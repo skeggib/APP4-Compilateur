@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
+using CodeGeneration;
+using LexicalAnalysis;
+using SemanticAnalysis;
+using SyntaxAnalysis;
 
 namespace CLightCompiler.Tests
 {
@@ -29,7 +33,12 @@ namespace CLightCompiler.Tests
 
         public static string Compile(string code)
         {
-            return CLightCompiler.Compile(code);
+            var compiler = new CLightCompiler(
+                new LexicalAnalyser(), 
+                new SyntaxAnalyser(), 
+                new SemanticAnalyser(), 
+                new MSMCodeGenerator());
+            return compiler.Compile(code);
         }
     }
 }
